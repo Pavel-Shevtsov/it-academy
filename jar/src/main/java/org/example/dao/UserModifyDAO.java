@@ -15,6 +15,7 @@ public interface UserModifyDAO {
     List <User> allUsers();
     int checkUserId();
     User checkUserRole(String userName);
+    User checkUserById(int id);
 
 
 }

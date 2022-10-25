@@ -1,3 +1,5 @@
+package org.web;
+
 import org.example.exception.UserValidationException;
 import org.example.dao.impl.UserDAOImpl;
 import org.example.dao.impl.UserModifyDAOImpl;
