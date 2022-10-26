@@ -46,7 +46,7 @@ public class MyFilter implements Filter {
         }else {
             String role = (String) session.getAttribute("role");
             String name  = (String) session.getAttribute("name");
-            if (role.equals("Admin")){
+            if (role.equalsIgnoreCase("Admin")){
                 List <User> allusers = userModifyDAO.allUsers();
                 allusers.forEach(u ->{
                     if (!u.getUserName().equals(name)){
