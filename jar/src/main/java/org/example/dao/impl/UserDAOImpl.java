@@ -43,7 +43,7 @@ public class UserDAOImpl implements UserDAO, Constant {
 
             }
         }
-        return null;
+        return new User(0,"0","0","0","0");
     }
 
     @Override

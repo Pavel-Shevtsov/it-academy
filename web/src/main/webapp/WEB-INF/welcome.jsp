@@ -18,7 +18,8 @@
                     <table>
                         <form action="logout" method = "get">
                             <tr>
-                            <td>Welcome    ${name}</td>
+                            <td>Welcome</td>
+                            <td> ${name}</td>
                             </tr>
                             <tr>
                                 <td><button onclick = "location.href = '${pageContext.request.contextPath}/logout' " >logout

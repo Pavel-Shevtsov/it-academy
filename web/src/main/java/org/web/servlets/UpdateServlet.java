@@ -66,7 +66,7 @@ public class UpdateServlet extends HttpServlet {
         }else  {
             req.setAttribute("updateUserPassword","<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
                     "\n uppercase character and at least one digit </p>");
-            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/users.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/update.jsp");
             rd.include(req,resp);
         }
 

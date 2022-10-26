@@ -1,12 +1,10 @@
 package org.web.filter;
-
-
 import jakarta.servlet.*;
+import jakarta.servlet.Filter;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.dao.impl.UserDAOImpl;
 import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.User;
 
@@ -17,7 +15,7 @@ import java.util.List;
 
 
 @WebFilter(urlPatterns = {"/users", "/update", "/welcome"})
-public class Filter implements jakarta.servlet.Filter {
+public class MyFilter implements Filter {
 
     UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
     private FilterConfig config = null;

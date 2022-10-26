@@ -10,6 +10,7 @@
     </head>
             <body>
                 ${updatePassword}
+                ${updateUserPassword}
                 <fieldset style = "width : 250px">
                     <legend>
                        Update
