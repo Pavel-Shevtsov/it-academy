@@ -9,6 +9,8 @@
 
     </head>
             <body>
+                ${userUpdate}
+
                 ${createNewUser}
                 <fieldset style = "width : 250px">
                         <legend>

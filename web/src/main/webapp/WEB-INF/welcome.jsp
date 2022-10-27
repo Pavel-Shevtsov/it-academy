@@ -9,7 +9,12 @@
 
     </head>
             <body>
+                ${userOtherUpdate}
+                ${userUpdate}
                 ${updatePassword}
+                ${updateUserPassword}
+                ${userEmailAlreadyRegistered}
+                ${userNameAlreadyRegistered}
                 ${deleteUser}
                 <fieldset style = "width : 250px">
                         <legend>

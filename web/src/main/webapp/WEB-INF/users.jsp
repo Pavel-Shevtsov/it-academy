@@ -26,10 +26,8 @@
                                     <td><c:out value ="${user}"/><td>
 
 
-                                <td><a href = "${pageContext.request.contextPath}/update?id=${user.id}" >Update
-                                 </button></td>
-                                <td><a href = "${pageContext.request.contextPath}/delete?id=${user.id}" >Delete
-                                 </button></td>
+                                <td><a href = "${pageContext.request.contextPath}/update?id=${user.id}" > Update</td>
+                                <td><a href = "${pageContext.request.contextPath}/delete?id=${user.id}" > Delete</td>
                                  </tr>
                             </c:forEach>
                         </table>

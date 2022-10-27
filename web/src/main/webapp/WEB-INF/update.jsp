@@ -9,31 +9,37 @@
 
     </head>
             <body>
-                ${updatePassword}
-                ${updateUserPassword}
-                <fieldset style = "width : 250px">
+
+                <fieldset style = "width : 350px">
                     <legend>
                        Update
                     </legend>
                     <table>
                         <form action="${pageContext.request.contextPath}/update" method = "post" >
                             <tr>
-                                 <td>UserName </td>
-                                 <td><input type="text" name = "name" required = "required"value = ${name}><td>
+                                 <td>Old UserName </td>
+                                 <td><input type = "text" name="oldName" value="${name}" readonly><td>
+                            </tr>
+                            <tr>
+                                 <td>New UserName </td>
+                                 <td><input type="text" name = "newName"  ><td>
                             </tr>
 
                             <tr>
                                  <td> Old Password </td>
-                                 <td><input type="password" name = "OldPassword" required = "required" value = ${oldPassword}><td>
+                                 <td><input type = "text" name="oldPassword" value="${oldPassword}" readonly><td>
                             </tr>
                             <tr>
                                  <td> New Password </td>
-                                 <td><input type="password" name = "newPassword" ><td>
+                                 <td><input type="password" name = "newPassword"><td>
                             </tr>
                             <tr>
-                                <td>  email </td>
-                                <td><input type="email" name = "email"  required = "required" value = ${email}><td>
+                                <td> Old Email </td>
+                                <td><input type = "text" name="oldEmail" value="${email}"readonly><td>
                             </tr>
+                            <tr>
+                                <td> New Email </td>
+                                <td><input type="email" name = "newEmail" ><td>
 
                             <tr>
                                 <td> <input type = "submit", value = "Update"></td>

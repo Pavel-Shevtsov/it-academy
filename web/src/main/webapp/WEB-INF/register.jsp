@@ -27,7 +27,7 @@
 
                             <tr>
                                      <td>  Repeat password </td>
-                                     <td><input type="password" name = "repeatpassword" required = "required"><td>
+                                     <td><input type="password" name = "repeatPassword" required = "required"><td>
                             </tr>
                             <tr>
                                       <td>  email </td>

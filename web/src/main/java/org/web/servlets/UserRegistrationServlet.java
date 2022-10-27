@@ -35,7 +35,7 @@ public class UserRegistrationServlet extends HttpServlet {
         resp.setContentType("text/html");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        String repeatPassword = req.getParameter("repeatpassword");
+        String repeatPassword = req.getParameter("repeatPassword");
         String email = req.getParameter("email");
         String role = "User";
 
@@ -48,7 +48,7 @@ public class UserRegistrationServlet extends HttpServlet {
 
         User comparisonUser = userDAO.getUserByUserName(userTem.getUserName());
 
-        if (!comparisonUser.getUserName().equals(userTem.getUserName()) && password.equals(repeatPassword)) {
+        if (comparisonUser==null && password.equals(repeatPassword)) {
 
             boolean passwordValidate = userValidation.isPasswordValidate(password);
 
@@ -85,7 +85,7 @@ public class UserRegistrationServlet extends HttpServlet {
 
             }
 
-        }else if(comparisonUser.getUserName().equals(userTem.getUserName())){
+        }else if(comparisonUser!=null&&comparisonUser.getUserName().equals(userTem.getUserName())){
             pw.write("<p style =\"color: red\">A user with the same name already exists." +
                     " Please enter a different username");
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
@@ -94,6 +94,11 @@ public class UserRegistrationServlet extends HttpServlet {
         }else if(!password.equals(repeatPassword)){
             pw.write("<p style =\"color: red\"> Password strings are not identical." +
                     "Please enter them again</p>");
+            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
+            rd.include(req,resp);
+            pw.close();
+        }else if (userValidation.isHaveUserWithUserEmail(userTem.getEmail())){
+            pw.write("<p style =\"color: red\"> User with this email is already register</p>");
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
             rd.include(req,resp);
             pw.close();
