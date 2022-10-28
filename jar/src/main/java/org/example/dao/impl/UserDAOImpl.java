@@ -29,13 +29,13 @@ public class UserDAOImpl implements UserDAO, Constant {
 
             while ((resultSearch = reader.readLine()) != null) {
                 String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
+                user.setId(Integer.parseInt((result[0])));
                 user.setUserName(result[1]);
                 user.setPassword(result[2]);
                 user.setEmail(result[3]);
                 user.setRole(result[4]);
 
-                contains = user.getUserName().equals(userName);
+                contains = user.getUserName().equalsIgnoreCase(userName);
 
                 if (contains) {
                     return user;
@@ -62,7 +62,7 @@ public class UserDAOImpl implements UserDAO, Constant {
                 user.setEmail(result[3]);
                 user.setRole(result[4]);
 
-                contains = user.getEmail().equals(email);
+                contains = user.getEmail().equalsIgnoreCase(email);
                 if (contains) {
                     return user;
                 }

@@ -11,11 +11,8 @@ public class UserValidation {
 
 
     public boolean isPasswordValidate(String password){
-        boolean validatePassword;
-        String passwords = password;
         String pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
-        validatePassword = passwords.matches(pattern);
-        return validatePassword;
+        return password.matches(pattern);
     }
 
    public boolean isHaveUserWithUserName(String userName) throws IOException {

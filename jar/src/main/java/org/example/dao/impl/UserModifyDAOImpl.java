@@ -94,8 +94,6 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
                 changeableUser = updateUser.get(i);
                 indexUser = i;
                 break;
-            }else {
-                continue;
             }
         }
 
@@ -145,11 +143,10 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
 
 
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return  users;
 }
 
@@ -207,6 +204,35 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
                 user.setRole(result[4]);
 
                 contains = user.getUserName().equals(userName);
+                if (contains) {
+                    return user;
+                }
+
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public User checkUserById (int id) {
+        try (BufferedReader reader = connection.getReader(fileName)) {
+
+            boolean contains;
+            String resultSearch;
+            User user = new User();
+
+            while ((resultSearch = reader.readLine()) != null) {
+                String[] result = resultSearch.split(",");
+                user.setId(Integer.parseInt(result[0]));
+                user.setUserName(result[1]);
+                user.setPassword(result[2]);
+                user.setEmail(result[3]);
+                user.setRole(result[4]);
+
+                contains = user.getId()==id;
                 if (contains) {
                     return user;
                 }
