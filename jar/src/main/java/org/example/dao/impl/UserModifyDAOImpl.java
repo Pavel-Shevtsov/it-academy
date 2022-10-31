@@ -1,5 +1,6 @@
 package org.example.dao.impl;
 
+import org.example.connection.DataBaseConnection;
 import org.example.connection.FileConnection;
 import org.example.constant.Constant;
 import org.example.dao.UserModifyDAO;
@@ -9,76 +10,54 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
     FileConnection connection = new FileConnection();
+    DataBaseConnection dataBaseConnection = new DataBaseConnection();
+    User user;
 
 
 
     @Override
-    public void addUser(User user) throws IOException {
-        ArrayList<User> users = new ArrayList<>();
+    public void addUser(User user) throws  SQLException {
 
-        try(BufferedReader reader = connection.getReader(fileName)) {
+        PreparedStatement preparedStatement;
 
-            String resultSearch;
-            int count = 0;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            while ((resultSearch = reader.readLine()) != null) {
+            preparedStatement = connection.prepareStatement(SQL_ADD_USER);
 
-                User userSearch = new User();
-
-                String[] resultSearchUserParam = resultSearch.split(",");
-                userSearch.setId(Integer.parseInt(resultSearchUserParam[0]));
-                userSearch.setUserName(resultSearchUserParam[1]);
-                userSearch.setPassword(resultSearchUserParam[2]);
-                userSearch.setEmail(resultSearchUserParam[3]);
-                userSearch.setRole(resultSearchUserParam[4]);
-
-                users.add(count++, userSearch);
-
-            }
-
-            users.add(count++,user);
-        }
-
-        try (PrintWriter print = connection.getWriter(fileName)){
-
-            for (int i = 0;i < users.size();i++){
-                print.write(users.get(i)+ "\n");
-                print.flush();
-            }
+            preparedStatement.setString(2,user.getUserName());
+            preparedStatement.setString(3,user.getPassword());
+            preparedStatement.setString(4,user.getRole());
+            preparedStatement.setString(5,user.getEmail());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         }
 
     }
 
     @Override
-    public void deleteUser(int id)  {
+    public void deleteUser(int id) throws SQLException {
 
-        User user = new User(id);
+        PreparedStatement preparedStatement;
 
-        ArrayList searchForAUsersById = allUsers();
-        if (searchForAUsersById.size()!= 0){
-            int usersPositionInTheList = searchForAUsersById.indexOf(user);
-            searchForAUsersById.remove(usersPositionInTheList);
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_DELETE_USER);
+            preparedStatement.setInt(1,user.getId());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         }
-
-
-        try(PrintWriter print = connection.getWriter(fileName)){
-            for (int i = 0;i < searchForAUsersById.size();i++) {
-                print.write(searchForAUsersById.get(i) + "\n");
-                print.flush();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
 
     }
+
 
     @Override
     public User updateUser(int id) throws IOException {
@@ -118,74 +97,31 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
     }
 
     @Override
-    public ArrayList<User> allUsers() {
+    public ArrayList<User> allUsers() throws SQLException {
 
         ArrayList<User> users = new ArrayList<>();
 
-        try(BufferedReader reader = connection.getReader(fileName)) {
+        PreparedStatement preparedStatement;
 
-            String resultSearch;
-            int count = 0;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            while ((resultSearch = reader.readLine()) != null) {
+            preparedStatement = connection.prepareStatement(SQL_ALL_USERS);
 
-                User userSearch = new User();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                String[] resultSearchUserParam = resultSearch.split(",");
-                userSearch.setId(Integer.parseInt(resultSearchUserParam[0]));
-                userSearch.setUserName(resultSearchUserParam[1]);
-                userSearch.setPassword(resultSearchUserParam[2]);
-                userSearch.setEmail(resultSearchUserParam[3]);
-                userSearch.setRole(resultSearchUserParam[4]);
-
-                users.add(count++, userSearch);
-
-
-
+            while (resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("userName"));
+                user.setPassword(resultSet.getString("password"));
+                user.setRole(resultSet.getString("role"));
+                user.setEmail(resultSet.getString("email"));
+                users.add(user);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
         }
-
-        return  users;
-}
-
-    @Override
-    public int checkUserId() {
-
-        try (BufferedReader reader = connection.getReader(fileName)) {
-
-            int counterFreeId = 1;
-            String resultSearchId;
-
-            List<Integer> existingUserId = new ArrayList<>();
-
-            while ((resultSearchId = reader.readLine()) != null) {
-
-                int count = 0;
-
-                String[] userId = resultSearchId.split(",");
-                existingUserId.add(count, Integer.valueOf(userId[0])); ///44
-                count++;
-
-            }
-
-            for (int i = 0; i < existingUserId.size()+1; i++) {
-                boolean freeId = existingUserId.contains(counterFreeId);
-                if (freeId) {
-                    counterFreeId++;
-                } else {
-                    return counterFreeId;
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return -1 ;
+        return users;
     }
+
 
     @Override
     public User checkUserRole(String userName) {
@@ -217,33 +153,5 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
         }
         return null;
     }
-    public User checkUserById (int id) {
-        try (BufferedReader reader = connection.getReader(fileName)) {
 
-            boolean contains;
-            String resultSearch;
-            User user = new User();
-
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
-
-                contains = user.getId()==id;
-                if (contains) {
-                    return user;
-                }
-
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

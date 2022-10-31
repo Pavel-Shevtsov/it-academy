@@ -25,6 +25,4 @@ public class LogoutServlet extends HttpServlet {
         rd.include(req,resp);
     }
 
-
-
-    }
+}

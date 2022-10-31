@@ -56,9 +56,6 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
             requestDispatcher.include(req,resp);
             pw.close();
-
-
-
         }
 
     }
