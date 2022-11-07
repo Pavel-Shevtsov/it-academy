@@ -34,10 +34,10 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
 
             preparedStatement = connection.prepareStatement(SQL_ADD_USER);
 
-            preparedStatement.setString(2,user.getUserName());
-            preparedStatement.setString(3,user.getPassword());
-            preparedStatement.setString(4,user.getRole());
-            preparedStatement.setString(5,user.getEmail());
+            preparedStatement.setString(1,user.getUserName());
+            preparedStatement.setString(2,user.getPassword());
+            preparedStatement.setString(3,user.getRole());
+            preparedStatement.setString(4,user.getEmail());
             preparedStatement.executeUpdate();
             preparedStatement.close();
         }
@@ -51,49 +51,41 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
 
         try (Connection connection = dataBaseConnection.getConnection()) {
             preparedStatement = connection.prepareStatement(SQL_DELETE_USER);
-            preparedStatement.setInt(1,user.getId());
+            preparedStatement.setInt(1,id);
             preparedStatement.executeUpdate();
             preparedStatement.close();
         }
+        preparedStatement.close();
 
     }
 
 
     @Override
-    public User updateUser(int id) throws IOException {
+    public void updateUser(User oldUser, User newUser) throws SQLException {
 
-        ArrayList<User> updateUser = allUsers();
-        User changeableUser = null;
-        int indexUser = 0;
+        PreparedStatement preparedStatement;
 
-        for (int i = 0; i < updateUser.size(); i++) {
-            int idListUser = updateUser.get(i).getId();
-
-            if (idListUser == id){
-                changeableUser = updateUser.get(i);
-                indexUser = i;
-                break;
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_USER);
+            if (newUser.getUserName()==null){
+                newUser.setUserName(oldUser.getUserName());
             }
-        }
+            if (newUser.getPassword()==null){
+                newUser.setPassword(oldUser.getPassword());
+            }
+            if (newUser.getEmail()==null){
+                newUser.setEmail(oldUser.getEmail());
+            }
 
-        if (changeableUser!=null){
-           
-            updateUser.remove(indexUser);
-
-            try (PrintWriter print = connection.getWriter(fileName)){
-
-                for (int i = 0;i < updateUser.size();i++){
-                    print.write(updateUser.get(i) + "\n" );
-                    print.flush();
-                }
-
-            return changeableUser;
-        }
-
+            preparedStatement.setString(1,newUser.getUserName());
+            preparedStatement.setString(2,newUser.getPassword());
+            preparedStatement.setString(3,newUser.getEmail());
+            preparedStatement.setInt(4,oldUser.getId());
+            preparedStatement.executeUpdate();
 
         }
+        preparedStatement.close();
 
-        return null;
     }
 
     @Override
@@ -110,48 +102,43 @@ public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("userName"));
-                user.setPassword(resultSet.getString("password"));
-                user.setRole(resultSet.getString("role"));
-                user.setEmail(resultSet.getString("email"));
-                users.add(user);
+               int id = resultSet.getInt("id");
+               String name = resultSet.getString("userName");
+               String password = resultSet.getString("password");
+               String role = resultSet.getString("role");
+               String email = resultSet.getString("email");
+               user = new User(id,name,password,email,role);
+               users.add(user);
             }
-
+            preparedStatement.close();
+            resultSet.close();
         }
         return users;
     }
 
-
     @Override
-    public User checkUserRole(String userName) {
-        try (BufferedReader reader = connection.getReader(fileName)) {
+    public User checkUserById(int id) throws SQLException {
+        PreparedStatement preparedStatement;
 
-            boolean contains;
-            String resultSearch;
-            User user = new User();
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_CHECK_USER_BY_ID);
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
+            while (resultSet.next()) {
+              int userId = (resultSet.getInt("id"));
+              String name =  (resultSet.getString("userName"));
+              String password = (resultSet.getString("password"));
+              String role = (resultSet.getString("role"));
+              String email = (resultSet.getString("email"));
 
-                contains = user.getUserName().equals(userName);
-                if (contains) {
-                    return user;
-                }
+              user = new User(userId,name,password,email,role);
 
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            preparedStatement.close();
+            resultSet.close();
         }
-        return null;
+        return user;
     }
 
 }

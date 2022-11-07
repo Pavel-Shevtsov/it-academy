@@ -18,7 +18,6 @@ public class LogoutServlet extends HttpServlet {
         resp.setContentType("text/html");
         HttpSession session=req.getSession();
         if (session!=null) {
-
             session.invalidate();
         }
         RequestDispatcher rd = req.getRequestDispatcher("/login");

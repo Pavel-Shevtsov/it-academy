@@ -10,6 +10,7 @@ import org.example.model.User;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,16 @@ public class MyFilter implements Filter {
             String role = (String) session.getAttribute("role");
             String name  = (String) session.getAttribute("name");
             if (role.equalsIgnoreCase("Admin")){
-                List <User> allusers = userModifyDAO.allUsers();
+                List <User> allusers = null;
+                try {
+                    allusers = userModifyDAO.allUsers();
+
+                } catch (SQLException ex) {
+                    req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
+                            "Return to the login page and login again </p>");
+                    RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
+                    rd.forward(req,resp);
+                }
                 allusers.forEach(u ->{
                     if (!u.getUserName().equals(name)){
                         users.add(u);

@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO, Constant {
         try (Connection connection = dataBaseConnection.getConnection()) {
 
             preparedStatement = connection.prepareStatement(SQL_BY_NAME);
-            preparedStatement.setString(2,userName);
+            preparedStatement.setString(1,userName);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -37,12 +37,12 @@ public class UserDAOImpl implements UserDAO, Constant {
                 user.setPassword(resultSet.getString("password"));
                 user.setRole(resultSet.getString("role"));
                 user.setEmail(resultSet.getString("email"));
-
+                return user;
             }
             preparedStatement.close();
             resultSet.close();
         }
-        return user;
+        return null;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserDAOImpl implements UserDAO, Constant {
         try (Connection connection = dataBaseConnection.getConnection()) {
 
             preparedStatement = connection.prepareStatement(SQL_BY_EMAIL);
-            preparedStatement.setString(5,email);
+            preparedStatement.setString(1,email);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -61,17 +61,13 @@ public class UserDAOImpl implements UserDAO, Constant {
                 user.setPassword(resultSet.getString("password"));
                 user.setRole(resultSet.getString("role"));
                 user.setEmail(resultSet.getString("email"));
-
+                return user;
             }
             preparedStatement.close();
             resultSet.close();
         }
-        return user;
+        return null;
     }
-
-
-
-
 
     @Override
     public User getUserByUserPassword(String password) throws SQLException {
@@ -80,7 +76,7 @@ public class UserDAOImpl implements UserDAO, Constant {
         try (Connection connection = dataBaseConnection.getConnection()) {
 
             preparedStatement = connection.prepareStatement(SQL_BY_PASSWORD);
-            preparedStatement.setString(3,password);
+            preparedStatement.setString(1,password);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -89,13 +85,11 @@ public class UserDAOImpl implements UserDAO, Constant {
                 user.setPassword(resultSet.getString("password"));
                 user.setRole(resultSet.getString("role"));
                 user.setEmail(resultSet.getString("email"));
-
+                return user;
             }
             preparedStatement.close();
             resultSet.close();
         }
-        return user;
+        return null;
     }
-
-
 }

@@ -22,7 +22,7 @@
                             </tr>
                             <tr>
                                  <td>New UserName </td>
-                                 <td><input type="text" name = "newName"  ><td>
+                                 <td><input type="text" name ="newName"  ><td>
                             </tr>
 
                             <tr>
@@ -31,7 +31,7 @@
                             </tr>
                             <tr>
                                  <td> New Password </td>
-                                 <td><input type="password" name = "newPassword"><td>
+                                 <td><input type="password" name ="newPassword"><td>
                             </tr>
                             <tr>
                                 <td> Old Email </td>

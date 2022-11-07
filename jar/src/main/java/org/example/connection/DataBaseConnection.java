@@ -2,9 +2,9 @@ package org.example.connection;
 
 import org.example.constant.Constant;
 
+
 import java.sql.*;
 
-import javax.sql.*;
 
 public class DataBaseConnection implements Constant {
     public Connection getConnection() throws SQLException {

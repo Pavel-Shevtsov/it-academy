@@ -6,7 +6,6 @@ public interface Constant  {
      String URL_DB_MYSQL = "jdbc:mysql://localhost:3306/it-academy";
      String USER_BD_MYSQL = "root";
      String PASSWORD_BD_MYSQL = "root1";
-     String DRIVER = "com.msql.cj.jdbc";
 
 
      String SQL_BY_NAME = "SELECT * FROM user WHERE userName = ?";
@@ -16,5 +15,6 @@ public interface Constant  {
      String SQL_ALL_USERS = "SELECT * FROM user";
      String SQL_ADD_USER = "INSERT INTO user (userName, password,role,email) values (?,?,?,?)";
      String SQL_DELETE_USER = "DELETE FROM user WHERE id=?";
-
+     String SQL_CHECK_USER_BY_ID = "SELECT * FROM user WHERE  id =?";
+     String SQL_UPDATE_USER = "UPDATE user Set userName = ?, password = ?, email=?  where id = ?";
 }
