@@ -1,21 +1,15 @@
 package org.example.dao;
-
-import org.example.exception.UserModifyException;
 import org.example.model.User;
-
-import java.io.IOException;
-
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UserModifyDAO {
 
-    void addUser(User user) throws IOException;
-    void deleteUser(int id) throws UserModifyException;
-    User updateUser(int id) throws IOException;
-    List <User> allUsers();
-    int checkUserId();
-    User checkUserRole(String userName);
-    User checkUserById(int id);
+    void addUser(User user) throws SQLException;
+    void deleteUser(int id) throws SQLException;
+    void updateUser(User oldUser, User newUser) throws SQLException;
+    List <User> allUsers() throws SQLException;
+    User checkUserById(int id) throws SQLException;
 
 
 }

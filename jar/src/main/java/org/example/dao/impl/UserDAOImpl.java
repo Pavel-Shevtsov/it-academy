@@ -1,110 +1,95 @@
 package org.example.dao.impl;
 
+import org.example.connection.DataBaseConnection;
+import org.example.connection.FileConnection;
 import org.example.constant.Constant;
 import org.example.dao.UserDAO;
-import org.example.connection.FileConnection;
 import org.example.model.User;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class UserDAOImpl implements UserDAO, Constant {
 
     FileConnection connection = new FileConnection();
+    DataBaseConnection dataBaseConnection = new DataBaseConnection();
     User user = new User();
 
 
     @Override
-    public User getUserByUserName(String userName) throws IOException {
+    public User getUserByUserName(String userName) throws IOException, SQLException {
 
-        try (BufferedReader reader = connection.getReader(fileName)) {
+        PreparedStatement preparedStatement;
 
-            boolean contains;
-            String resultSearch;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
+            preparedStatement = connection.prepareStatement(SQL_BY_NAME);
+            preparedStatement.setString(1,userName);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt((result[0])));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
-
-                contains = user.getUserName().equalsIgnoreCase(userName);
-
-                if (contains) {
-                    return user;
-                }
-
+            while (resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("userName"));
+                user.setPassword(resultSet.getString("password"));
+                user.setRole(resultSet.getString("role"));
+                user.setEmail(resultSet.getString("email"));
+                return user;
             }
+            preparedStatement.close();
+            resultSet.close();
         }
         return null;
     }
 
     @Override
-    public User getUserByEmail(String email) throws IOException {
+    public User getUserByEmail(String email) throws SQLException {
+        PreparedStatement preparedStatement;
 
-        try (BufferedReader reader = connection.getReader(fileName)) {
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            boolean contains;
-            String resultSearch;
+            preparedStatement = connection.prepareStatement(SQL_BY_EMAIL);
+            preparedStatement.setString(1,email);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
-
-                contains = user.getEmail().equalsIgnoreCase(email);
-                if (contains) {
-                    return user;
-                }
-
+            while (resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("userName"));
+                user.setPassword(resultSet.getString("password"));
+                user.setRole(resultSet.getString("role"));
+                user.setEmail(resultSet.getString("email"));
+                return user;
             }
-
+            preparedStatement.close();
+            resultSet.close();
         }
         return null;
     }
-
-
-
 
     @Override
-    public User getUserByUserPassword(String password) {
-        try (BufferedReader reader = connection.getReader(fileName)) {
+    public User getUserByUserPassword(String password) throws SQLException {
+        PreparedStatement preparedStatement;
 
-            boolean contains;
-            String resultSearch;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
+            preparedStatement = connection.prepareStatement(SQL_BY_PASSWORD);
+            preparedStatement.setString(1,password);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                contains = user.getPassword().equals(password);
-                if (contains) {
-                    return user;
-                }
-
+            while (resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("userName"));
+                user.setPassword(resultSet.getString("password"));
+                user.setRole(resultSet.getString("role"));
+                user.setEmail(resultSet.getString("email"));
+                return user;
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            preparedStatement.close();
+            resultSet.close();
         }
         return null;
     }
-
-
 }

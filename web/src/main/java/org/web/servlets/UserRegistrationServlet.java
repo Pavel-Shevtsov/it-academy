@@ -14,6 +14,7 @@ import org.example.validation.UserValidation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 
 @WebServlet(name = "UserRegistrationServlet", urlPatterns = "/register")
@@ -46,29 +47,43 @@ public class UserRegistrationServlet extends HttpServlet {
         userTem.setEmail(email);
         userTem.setRole(role);
 
-        User comparisonUser = userDAO.getUserByUserName(userTem.getUserName());
+        User comparisonUser = null;
+        try {
+            comparisonUser = userDAO.getUserByUserName(userTem.getUserName());
+        } catch (SQLException e) {
+            req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
+                    "Return to the login page and login again </p>");
+            RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
+            rd.forward(req,resp);
+        }
 
-        if (comparisonUser==null && password.equals(repeatPassword)) {
+        if (comparisonUser == null && password.equals(repeatPassword)) {
 
             boolean passwordValidate = userValidation.isPasswordValidate(password);
 
             if(passwordValidate){
                 userTem.setPassword(password);
 
-                user.setId(userModifyDAO.checkUserId());
+
                 user.setUserName(userTem.getUserName());
                 user.setPassword(userTem.getPassword());
                 user.setEmail(userTem.getEmail());
                 user.setRole(userTem.getRole());
 
-                userModifyDAO.addUser(user);
+                try {
+                    userModifyDAO.addUser(user);
+                } catch (SQLException e) {
+                    req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
+                            "Return to the login page and login again </p>");
+                    RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
+                    rd.forward(req,resp);
+                }
                 req.setAttribute("createNewUser", "<p style = \"color: blue\"> User successfully registered." +
                         "Please login to account </p>");
 
                 if (httpSession!=null){
                     httpSession.setAttribute("name",user.getUserName());
                     httpSession.setAttribute("role", user.getRole());
-
                 }
 
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
@@ -82,7 +97,6 @@ public class UserRegistrationServlet extends HttpServlet {
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
                 rd.include(req,resp);
                 pw.close();
-
             }
 
         }else if(comparisonUser!=null&&comparisonUser.getUserName().equals(userTem.getUserName())){
@@ -97,11 +111,20 @@ public class UserRegistrationServlet extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
             rd.include(req,resp);
             pw.close();
-        }else if (userValidation.isHaveUserWithUserEmail(userTem.getEmail())){
-            pw.write("<p style =\"color: red\"> User with this email is already register</p>");
-            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
-            rd.include(req,resp);
-            pw.close();
+        }else {
+            try {
+                if (userValidation.isHaveUserWithUserEmail(userTem.getEmail())){
+                    pw.write("<p style =\"color: red\"> User with this email is already register</p>");
+                    RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
+                    rd.include(req,resp);
+                    pw.close();
+                }
+            } catch (SQLException e) {
+                req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
+                        "Return to the login page and login again </p>");
+                RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
+                rd.forward(req,resp);
+            }
         }
 
     }

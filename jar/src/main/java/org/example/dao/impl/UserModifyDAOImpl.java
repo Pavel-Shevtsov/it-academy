@@ -1,5 +1,6 @@
 package org.example.dao.impl;
 
+import org.example.connection.DataBaseConnection;
 import org.example.connection.FileConnection;
 import org.example.constant.Constant;
 import org.example.dao.UserModifyDAO;
@@ -9,241 +10,135 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class UserModifyDAOImpl  implements UserModifyDAO, Constant  {
     FileConnection connection = new FileConnection();
+    DataBaseConnection dataBaseConnection = new DataBaseConnection();
+    User user;
 
 
 
     @Override
-    public void addUser(User user) throws IOException {
-        ArrayList<User> users = new ArrayList<>();
+    public void addUser(User user) throws  SQLException {
 
-        try(BufferedReader reader = connection.getReader(fileName)) {
+        PreparedStatement preparedStatement;
 
-            String resultSearch;
-            int count = 0;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            while ((resultSearch = reader.readLine()) != null) {
+            preparedStatement = connection.prepareStatement(SQL_ADD_USER);
 
-                User userSearch = new User();
-
-                String[] resultSearchUserParam = resultSearch.split(",");
-                userSearch.setId(Integer.parseInt(resultSearchUserParam[0]));
-                userSearch.setUserName(resultSearchUserParam[1]);
-                userSearch.setPassword(resultSearchUserParam[2]);
-                userSearch.setEmail(resultSearchUserParam[3]);
-                userSearch.setRole(resultSearchUserParam[4]);
-
-                users.add(count++, userSearch);
-
-            }
-
-            users.add(count++,user);
-        }
-
-        try (PrintWriter print = connection.getWriter(fileName)){
-
-            for (int i = 0;i < users.size();i++){
-                print.write(users.get(i)+ "\n");
-                print.flush();
-            }
+            preparedStatement.setString(1,user.getUserName());
+            preparedStatement.setString(2,user.getPassword());
+            preparedStatement.setString(3,user.getRole());
+            preparedStatement.setString(4,user.getEmail());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         }
 
     }
 
     @Override
-    public void deleteUser(int id)  {
+    public void deleteUser(int id) throws SQLException {
 
-        User user = new User(id);
+        PreparedStatement preparedStatement;
 
-        ArrayList searchForAUsersById = allUsers();
-        if (searchForAUsersById.size()!= 0){
-            int usersPositionInTheList = searchForAUsersById.indexOf(user);
-            searchForAUsersById.remove(usersPositionInTheList);
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_DELETE_USER);
+            preparedStatement.setInt(1,id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         }
+        preparedStatement.close();
+
+    }
 
 
-        try(PrintWriter print = connection.getWriter(fileName)){
-            for (int i = 0;i < searchForAUsersById.size();i++) {
-                print.write(searchForAUsersById.get(i) + "\n");
-                print.flush();
+    @Override
+    public void updateUser(User oldUser, User newUser) throws SQLException {
+
+        PreparedStatement preparedStatement;
+
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_USER);
+            if (newUser.getUserName()==null){
+                newUser.setUserName(oldUser.getUserName());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (newUser.getPassword()==null){
+                newUser.setPassword(oldUser.getPassword());
+            }
+            if (newUser.getEmail()==null){
+                newUser.setEmail(oldUser.getEmail());
+            }
+
+            preparedStatement.setString(1,newUser.getUserName());
+            preparedStatement.setString(2,newUser.getPassword());
+            preparedStatement.setString(3,newUser.getEmail());
+            preparedStatement.setInt(4,oldUser.getId());
+            preparedStatement.executeUpdate();
+
         }
-
-
+        preparedStatement.close();
 
     }
 
     @Override
-    public User updateUser(int id) throws IOException {
-
-        ArrayList<User> updateUser = allUsers();
-        User changeableUser = null;
-        int indexUser = 0;
-
-        for (int i = 0; i < updateUser.size(); i++) {
-            int idListUser = updateUser.get(i).getId();
-
-            if (idListUser == id){
-                changeableUser = updateUser.get(i);
-                indexUser = i;
-                break;
-            }
-        }
-
-        if (changeableUser!=null){
-           
-            updateUser.remove(indexUser);
-
-            try (PrintWriter print = connection.getWriter(fileName)){
-
-                for (int i = 0;i < updateUser.size();i++){
-                    print.write(updateUser.get(i) + "\n" );
-                    print.flush();
-                }
-
-            return changeableUser;
-        }
-
-
-        }
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<User> allUsers() {
+    public ArrayList<User> allUsers() throws SQLException {
 
         ArrayList<User> users = new ArrayList<>();
 
-        try(BufferedReader reader = connection.getReader(fileName)) {
+        PreparedStatement preparedStatement;
 
-            String resultSearch;
-            int count = 0;
+        try (Connection connection = dataBaseConnection.getConnection()) {
 
-            while ((resultSearch = reader.readLine()) != null) {
+            preparedStatement = connection.prepareStatement(SQL_ALL_USERS);
 
-                User userSearch = new User();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                String[] resultSearchUserParam = resultSearch.split(",");
-                userSearch.setId(Integer.parseInt(resultSearchUserParam[0]));
-                userSearch.setUserName(resultSearchUserParam[1]);
-                userSearch.setPassword(resultSearchUserParam[2]);
-                userSearch.setEmail(resultSearchUserParam[3]);
-                userSearch.setRole(resultSearchUserParam[4]);
-
-                users.add(count++, userSearch);
-
-
-
+            while (resultSet.next()) {
+               int id = resultSet.getInt("id");
+               String name = resultSet.getString("userName");
+               String password = resultSet.getString("password");
+               String role = resultSet.getString("role");
+               String email = resultSet.getString("email");
+               user = new User(id,name,password,email,role);
+               users.add(user);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            preparedStatement.close();
+            resultSet.close();
         }
-
-        return  users;
-}
-
-    @Override
-    public int checkUserId() {
-
-        try (BufferedReader reader = connection.getReader(fileName)) {
-
-            int counterFreeId = 1;
-            String resultSearchId;
-
-            List<Integer> existingUserId = new ArrayList<>();
-
-            while ((resultSearchId = reader.readLine()) != null) {
-
-                int count = 0;
-
-                String[] userId = resultSearchId.split(",");
-                existingUserId.add(count, Integer.valueOf(userId[0])); ///44
-                count++;
-
-            }
-
-            for (int i = 0; i < existingUserId.size()+1; i++) {
-                boolean freeId = existingUserId.contains(counterFreeId);
-                if (freeId) {
-                    counterFreeId++;
-                } else {
-                    return counterFreeId;
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return -1 ;
+        return users;
     }
 
     @Override
-    public User checkUserRole(String userName) {
-        try (BufferedReader reader = connection.getReader(fileName)) {
+    public User checkUserById(int id) throws SQLException {
+        PreparedStatement preparedStatement;
 
-            boolean contains;
-            String resultSearch;
-            User user = new User();
+        try (Connection connection = dataBaseConnection.getConnection()) {
+            preparedStatement = connection.prepareStatement(SQL_CHECK_USER_BY_ID);
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
+            while (resultSet.next()) {
+              int userId = (resultSet.getInt("id"));
+              String name =  (resultSet.getString("userName"));
+              String password = (resultSet.getString("password"));
+              String role = (resultSet.getString("role"));
+              String email = (resultSet.getString("email"));
 
-                contains = user.getUserName().equals(userName);
-                if (contains) {
-                    return user;
-                }
+              user = new User(userId,name,password,email,role);
 
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            preparedStatement.close();
+            resultSet.close();
         }
-        return null;
+        return user;
     }
-    public User checkUserById (int id) {
-        try (BufferedReader reader = connection.getReader(fileName)) {
 
-            boolean contains;
-            String resultSearch;
-            User user = new User();
-
-            while ((resultSearch = reader.readLine()) != null) {
-                String[] result = resultSearch.split(",");
-                user.setId(Integer.parseInt(result[0]));
-                user.setUserName(result[1]);
-                user.setPassword(result[2]);
-                user.setEmail(result[3]);
-                user.setRole(result[4]);
-
-                contains = user.getId()==id;
-                if (contains) {
-                    return user;
-                }
-
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
