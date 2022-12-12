@@ -9,10 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.UserDAOImpl;
 import org.example.model.User;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 
 @WebServlet( name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
@@ -36,20 +34,11 @@ public class LoginServlet extends HttpServlet {
 
         UserDAOImpl userDAO = new UserDAOImpl();
         User user = null;
-        try {
-            user = userDAO.getUserByUserName(userTem.getUserName());
-        } catch (SQLException e) {
-            req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                    "Return to the login page and login again </p>");
-            RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-            rd.forward(req,resp);
-        }
+        user = userDAO.getUserByUserName(userTem.getUserName());
         if (user==null){
-            PrintWriter pw = resp.getWriter();
-            pw.write("<p style =\"color: red\"> Sorry user with this username is not registered </p>");
+            req.setAttribute("loginError","<p style =\"color: red\"> Sorry user with this username is not registered </p>");
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
             requestDispatcher.include(req,resp);
-            pw.close();
         }
 
         if (userTem.getPassword().equals(user.getPassword())){
@@ -62,14 +51,12 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("email", user.getEmail());
             }
 
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/welcome");
-            requestDispatcher.forward(req,resp);
+            resp.sendRedirect("/web/welcome");
+
         }else {
-            PrintWriter pw = resp.getWriter();
-            pw.write("<p style =\"color: red\"> Sorry username or password error</p>");
+            req.setAttribute("errorPasswordUsername","<p style =\"color: red\"> Sorry username or password error</p>");
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
             requestDispatcher.include(req,resp);
-            pw.close();
         }
 
     }

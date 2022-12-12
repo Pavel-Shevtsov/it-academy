@@ -13,7 +13,6 @@ import org.example.model.User;
 import org.example.validation.UserValidation;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "UpdateServlet", urlPatterns = "/update")
 public class UpdateServlet extends HttpServlet {
@@ -34,12 +33,8 @@ public class UpdateServlet extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/update.jsp");
             rd.forward(req, resp);
         } else {
-            User userTem = null;
-            try {
-                userTem = userModifyDAO.checkUserById(Integer.parseInt(userId));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            User userTem;
+            userTem = userModifyDAO.getUserById(Integer.parseInt(userId));
             req.setAttribute("id", userTem.getId());
             req.setAttribute("name", userTem.getUserName());
             req.setAttribute("oldPassword", userTem.getPassword());
@@ -66,27 +61,11 @@ public class UpdateServlet extends HttpServlet {
         boolean validationName = false;
         boolean validationEmail = false;
 
-            try {
-                oldUser = userDAO.getUserByUserName(oldName);
-                updatedUser.setId(oldUser.getId());
-            } catch (SQLException e) {
-                req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                        "Return to the login page and login again </p>");
-                RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-                rd.forward(req,resp);
-            }
+        oldUser = userDAO.getUserByUserName(oldName);
+        updatedUser.setId(oldUser.getId());
 
-            if (!newName.equals("")) {
-            try {
-                validationName = userValidation.isHaveUserWithUserName(newName);
-            } catch (SQLException e) {
-                req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                        "Return to the login page and login again </p>");
-                RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-                rd.forward(req,resp);
-            }
-
-
+        if (!newName.equals("")) {
+            validationName = userValidation.isHaveUserWithUserName(newName);
             if (validationName) {
                 req.setAttribute("userNameAlreadyRegistered", "<p style = \"color: red\">A user with this username is already registered</p>");
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/welcome.jsp");
@@ -94,6 +73,8 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setUserName(newName);
             }
+        }else{
+            updatedUser.setUserName(oldName);
         }
 
         if (!newPassword.equals("")) {
@@ -113,17 +94,12 @@ public class UpdateServlet extends HttpServlet {
                     rd.forward(req, resp);
                 }
             }
+        }else{
+            updatedUser.setPassword(oldPassword);
         }
 
         if (!newEmail.equals("")) {
-            try {
-                validationEmail = userValidation.isHaveUserWithUserEmail(newEmail);
-            } catch (SQLException e) {
-                req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                        "Return to the login page and login again </p>");
-                RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-                rd.forward(req,resp);
-            }
+            validationEmail = userValidation.isHaveUserWithUserEmail(newEmail);
             if (validationEmail) {
                 req.setAttribute("userEmailAlreadyRegistered", "<p style = \"color: red\">A user with this email is already registered</p>");
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/welcome.jsp");
@@ -131,16 +107,11 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setEmail(newEmail);
             }
+        } else {
+            updatedUser.setEmail(oldEmail);
         }
 
-        try {
-            userModifyDAO.updateUser(oldUser,updatedUser);
-        } catch (SQLException e) {
-            req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                    "Return to the login page and login again </p>");
-            RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-            rd.forward(req,resp);
-        }
+        userModifyDAO.updateUser(updatedUser);
         if (oldName.equals(session.getAttribute("name"))){
             req.setAttribute("userUpdate","<p style = \"color: blue\"> User named " + oldName + " " + oldPassword + " " + oldEmail + " updated to " + newName + " " +
                     newPassword + " " + newEmail + " . Please login the app again</p>");

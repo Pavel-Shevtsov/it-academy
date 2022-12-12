@@ -1,77 +1,53 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
-public class User {
 
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@Entity
+@Table(name = "user")
+@NamedQueries({
+        @NamedQuery(name = "User.getAll", query = "SELECT u from User u"),
+        @NamedQuery(name = "User.getUserByUserName", query = "SELECT u from User u where u.userName = :userName"),
+        @NamedQuery(name = "User.getUserByPassword", query = "SELECT u from User u where u.password = :password"),
+        @NamedQuery(name = "User.getUserByEmail", query = "SELECT u from User u where u.email = :email"),
+        @NamedQuery(name = "User.getUserByIdWithTopic", query = "SELECT u from User u left join fetch u.topics where u.id = :userId")
+})
+
+public class User implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true,nullable = false,length = 30)
     private String userName;
+    @Column(nullable = false,length = 30)
     private String password;
+    @Column(unique = true,nullable = false,length = 40)
     private String email;
+    @Column(nullable = false,length = 6)
     private String role;
 
+    @ManyToMany(targetEntity = Topic.class,cascade = {CascadeType.ALL})
+    @JoinTable(
+            name ="User_Topic",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "topic_id")}
+    )
+    private List<Topic> topics;
 
-    public User() {
-    }
-
-    public User(int id) {
-        this.id = id;
-    }
-
-    public User(int id, String name, String password, String email, String role) {
-        this.id = id;
-        this.userName = name;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
-
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String name) {
-        this.userName = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return id + "," + userName + "," + password  + "," + email + "," + role  ;
-    }
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST} )
+    @ToString.Exclude
+    private List<Post> posts;
 
     @Override
     public boolean equals(Object o) {
