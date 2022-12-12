@@ -1,0 +1,84 @@
+.loginPage{
+    background-color:#D2B48C;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:60px;
+    width: 400px;
+    height: 500px;
+    border-radius: 10px;
+    margin:auto;
+}
+
+.legendLoginPage{
+    text-align: center;
+    padding-top: 30px
+}
+p{
+    font-family:fantasy;
+    line-height: 0.2em
+}
+h1{
+    font-family:fantasy;
+    font-size: 250%;
+    font-weight: lighter;
+    line-height: 0.2em
+}
+
+.loginText{
+    text-align: center;
+    padding-top: 100px;
+    margin:12px 0;
+    margin-bottom:auto;
+}
+
+input[type=text] {
+    width: 50%;
+    text-align: center;
+    padding: 8px 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border:0;
+    outline: none;
+}
+
+input[type=password] {
+    width: 50%;
+    text-align: center;
+
+    padding: 8px 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border:0;
+    outline: none;
+}
+
+input[type=submit]{
+    width: 30%;
+    text-align: center;
+    margin-right: auto;
+    padding: 8px 0;
+    margin-top: 80px;
+    border:0;
+    border-radius: 8px;
+}
+input[type=submit]:hover{
+    background-color:#d6cec7;
+}
+button{
+    width:100%;
+    height:40px;
+    background-color:#D2B48C;
+    border-radius: 8px;
+    border:none;
+    margin-top:10px;
+}
+button:hover {
+	background-color: #b8b2ad;
+}
+
+.message{
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+    margin:10px;
+}
