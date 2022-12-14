@@ -31,7 +31,7 @@ public class Topic implements Serializable {
     @OneToMany(mappedBy = "topic")
     @ToString.Exclude
     private List<Post> post;
-    @OneToMany(mappedBy = "topics")
+    @ManyToMany(mappedBy = "topics")
     @ToString.Exclude
     private List<User> users;
 

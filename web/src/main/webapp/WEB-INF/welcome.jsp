@@ -44,6 +44,8 @@
                               ${createTopicError}
                               ${createTopicSuccessfully}
                               ${addTopic}
+                              ${deletePost}
+                              ${updatePost}
                           </div>
                                  <div class ="welcomeMessage">
                                       <h1>Welcome ${name}</h1>
@@ -72,7 +74,7 @@
                                                       <tr>
                                                           <td><c:out value ="${topic.name}"/></td>
                                                           <td><p><a class="action" href ="${pageContext.request.contextPath}/deleteTopic?id=${topic.id}">Delete</a></p>
-                                                          <p><a class="action" href ="${pageContext.request.contextPath}/posts?id=${topic.id}">Go to</a></p></td>
+                                                          <p><a class="action" href ="${pageContext.request.contextPath}/posts?idTopic=${topic.id}">Go to</a></p></td>
                                                       </tr>
                                               </tbody>
                                                   </c:forEach>

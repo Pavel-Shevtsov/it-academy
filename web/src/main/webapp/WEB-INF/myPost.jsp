@@ -6,17 +6,19 @@
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
     <style>
         <%@include file="/WEB-INF/style/styleBody.css"%>
-        <%@include file="/WEB-INF/style/styleWelcomePage.css"%>
         <%@include file="/WEB-INF/style/stylePanel.css"%>
         <%@include file="/WEB-INF/style/styleDropDownUser.css"%>
-        <%@include file="/WEB-INF/style/styleTable.css"%>
+        <%@include file="/WEB-INF/style/myPostsPage.css"%>
+
     </style>
-    <title>Welcome</title>
+    <title>My posts</title>
     </head>
             <body>
 
+
                     <div class="panel">
                         <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
+                        <a class="addPost" href = "${pageContext.request.contextPath}/addPost?idTopic=${topicId}">Add Post</a>
                            <div class="dropDownUser">
                                <button class="dropBtn">${name}</button>
                                    <div class="dropDownUser-content" style="right:20;">
@@ -32,16 +34,21 @@
                                    </div>
                            </div>
                     </div>
-
+                           <div class= "message">
+                               ${addPost}
+                           </div>
+                                            <h2>My posts ${topicName}</h2>
                                             <c:forEach var="post" items="${posts}">
-                                                <tr>
-                                                    <td><c:out value ="${post.name}"/></td>
-                                                    <td><c:out value ="${post.text}"/></td>
+                                                <div class="myPostPage">
+                                                <p class="namePost">Name post: <c:out value ="${post.name}"/></p>
+                                                <a class="modifyLink" href = "${pageContext.request.contextPath}/updatePost?idPost=${post.id}"> Update </a>
+                                                <a class="modifyLink" href = "${pageContext.request.contextPath}/deletePost?idPost=${post.id}" > Delete </a>
+                                                <p class="textPost">Text post: <c:out value ="${post.text}"/></p>
 
-                                                <td><a class="action" href = "${pageContext.request.contextPath}/update?id=${user.id}" > Update
-                                                <a class="action" href = "${pageContext.request.contextPath}/delete?id=${user.id}" >   Delete</td>
-                                                 </tr>
-                                                 </tbody>
+
+
+                                                </div>
+
                                             </c:forEach>
             </body>
     </html>

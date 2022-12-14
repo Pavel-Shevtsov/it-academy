@@ -20,35 +20,17 @@ public class PostDAOImpl extends AbstractJPADAO implements PostModifyDAO {
 
     @Override
     public void deletePost(int id) {
-
+        init();
+        em.remove(em.find(Post.class,id));
+        close();
     }
 
     @Override
-    public void updatePost(Post oldPost, Post newPost) {
-
-        if (newPost.getName()==null){
-            newPost.setName(oldPost.getName());
-        }
-        if (newPost.getUser()==null){
-            newPost.setText(oldPost.getText());
-        }
-        if (newPost.getTopic()==null){
-            newPost.setTopic(oldPost.getTopic());
-        }
+    public void updatePost(Post newPost) {
         init();
         em.merge(newPost);
         close();
     }
-
-    @Override
-    public List<Post> allPost() {
-        init();
-        TypedQuery<Post> namedQuery = em.createNamedQuery("Post.getAll",Post.class);
-        List<Post>post = namedQuery.getResultList();
-        close();
-        return post;
-    }
-
     @Override
     public Post getPostById(int id) {
         Post post;

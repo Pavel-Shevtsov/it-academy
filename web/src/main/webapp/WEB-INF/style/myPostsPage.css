@@ -1,0 +1,24 @@
+.myPostPage{
+    background-color:#D2B48C;
+    border-radius:8px;
+    margin-left:10px;
+    margin-right:10px;
+}
+h2{
+    text-align:center;
+    margin-top:40px;
+}
+.modifyLink{
+    text-decoration:none;
+    margin-top:8px;
+    margin-left:10px;
+    margin-right:10px;
+    float:right;
+}
+.namePost{
+    display: inline;
+    margin-left:8px;
+}
+.textPost{
+    margin-left:8px;
+}

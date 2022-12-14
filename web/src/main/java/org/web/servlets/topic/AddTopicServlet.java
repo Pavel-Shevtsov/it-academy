@@ -40,9 +40,9 @@ public class AddTopicServlet extends HttpServlet {
 
         topicById.setUsers(Collections.singletonList(userByUserName));
         if (sizeUpTo!=sizeAfter){
-            req.setAttribute("addTopic","<p style = \"color: blue\"> topic add successful.</p>");
+            req.setAttribute("addTopic","<p style = \"color: blue\"> Topic add successful.</p>");
         }else {
-            req.setAttribute("addTopic","<p style = \"color: red\"> topic not added.</p>");
+            req.setAttribute("addTopic","<p style = \"color: red\"> Topic not added.</p>");
         }
 
         userModifyDAO.updateUser(userByUserName);

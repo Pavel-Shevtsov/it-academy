@@ -27,8 +27,6 @@ public class AllFreeTopics extends HttpServlet {
         List<Topic> allTopicsUser = userByIdWithTopic.getTopics();
         List<Topic> allTopics = topicDAO.allTopic();
         List <Topic> freeTopics = new ArrayList<>();
-        System.out.println(allTopics);
-        System.out.println(allTopicsUser);
         if (allTopicsUser.size()!=0) {
             for (Topic topic : allTopicsUser) {
                 for (int k = 0; k < allTopics.size(); k++) {
@@ -42,7 +40,7 @@ public class AllFreeTopics extends HttpServlet {
         freeTopics.addAll(allTopics);
 
         req.setAttribute("freeTopics", freeTopics);
-        RequestDispatcher rd = req.getRequestDispatcher("/addTopic");
+        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addTopic.jsp");
         rd.forward(req,resp);
     }
 

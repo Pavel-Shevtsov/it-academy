@@ -11,12 +11,22 @@
     font-size:30;
     text-decoration:none;
 }
+.addPost{
+    text-decoration:none;
+    font-size:20;
+}
 .nameApplication:hover{
     color:black;
 }
-.panel .nameApplication{
+.panel .nameApplication {
     margin-top: 7px;
     margin-left:15px;
+    float: left;
+    display: inline;
+}
+.panel .addPost{
+    margin-top:17px;
+    margin-left:40px;
     float: left;
     display: inline;
 }

@@ -25,7 +25,7 @@ public class TopicDAOImpl extends AbstractJPADAO implements TopicModifyDAO {
     }
 
     @Override
-    public void updateTopic( Topic newTopic) {
+    public void updateTopic(Topic newTopic) {
         init();
         em.merge(newTopic);
         close();

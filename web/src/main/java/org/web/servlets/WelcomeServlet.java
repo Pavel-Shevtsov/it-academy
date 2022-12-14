@@ -36,7 +36,7 @@ public class WelcomeServlet extends HttpServlet {
             req.setAttribute("userTopics", topics);
         }
         req.setAttribute("role", role);
-        RequestDispatcher rd = req.getRequestDispatcher("/welcome");
+        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/welcome.jsp");
         rd.forward(req,resp);
     }
 

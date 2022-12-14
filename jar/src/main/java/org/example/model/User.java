@@ -38,6 +38,7 @@ public class User implements Serializable {
     private String role;
 
     @ManyToMany(targetEntity = Topic.class,cascade = {CascadeType.ALL})
+    @ToString.Exclude
     @JoinTable(
             name ="User_Topic",
             joinColumns = {@JoinColumn(name = "user_id")},
