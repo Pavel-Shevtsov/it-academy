@@ -11,10 +11,8 @@ import org.example.dao.impl.UserDAOImpl;
 import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.User;
 import org.example.validation.UserValidation;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 
 
 @WebServlet(name = "UserRegistrationServlet", urlPatterns = "/register")
@@ -47,16 +45,7 @@ public class UserRegistrationServlet extends HttpServlet {
         userTem.setEmail(email);
         userTem.setRole(role);
 
-        User comparisonUser = null;
-        try {
-            comparisonUser = userDAO.getUserByUserName(userTem.getUserName());
-        } catch (SQLException e) {
-            req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                    "Return to the login page and login again </p>");
-            RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-            rd.forward(req,resp);
-        }
-
+        User comparisonUser = userDAO.getUserByUserName(userTem.getUserName());
         if (comparisonUser == null && password.equals(repeatPassword)) {
 
             boolean passwordValidate = userValidation.isPasswordValidate(password);
@@ -70,14 +59,7 @@ public class UserRegistrationServlet extends HttpServlet {
                 user.setEmail(userTem.getEmail());
                 user.setRole(userTem.getRole());
 
-                try {
-                    userModifyDAO.addUser(user);
-                } catch (SQLException e) {
-                    req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                            "Return to the login page and login again </p>");
-                    RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-                    rd.forward(req,resp);
-                }
+                userModifyDAO.addUser(user);
                 req.setAttribute("createNewUser", "<p style = \"color: blue\"> User successfully registered." +
                         "Please login to account </p>");
 
@@ -91,41 +73,29 @@ public class UserRegistrationServlet extends HttpServlet {
                 pw.close();
 
             }else {
-                pw.write("<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
+                req.setAttribute("errorPassword","<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
                         "\n uppercase character and at least one digit.\n" +
                         "Enter again </p>");
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
                 rd.include(req,resp);
-                pw.close();
             }
 
         }else if(comparisonUser!=null&&comparisonUser.getUserName().equals(userTem.getUserName())){
-            pw.write("<p style =\"color: red\">A user with the same name already exists." +
+            req.setAttribute("errorUserName","<p style =\"color: red\">A user with the same name already exists." +
                     " Please enter a different username");
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
             rd.include(req,resp);
-            pw.close();
         }else if(!password.equals(repeatPassword)){
-            pw.write("<p style =\"color: red\"> Password strings are not identical." +
+            req.setAttribute("errorRepeatPassword","<p style =\"color: red\"> Password strings are not identical." +
                     "Please enter them again</p>");
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
             rd.include(req,resp);
-            pw.close();
         }else {
-            try {
-                if (userValidation.isHaveUserWithUserEmail(userTem.getEmail())){
-                    pw.write("<p style =\"color: red\"> User with this email is already register</p>");
-                    RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
-                    rd.include(req,resp);
-                    pw.close();
-                }
-            } catch (SQLException e) {
-                req.setAttribute("error","<p style = \"color: red\">  Don't worry, an error has occurred.\n" +
-                        "Return to the login page and login again </p>");
-                RequestDispatcher rd = req.getRequestDispatcher("error.jsp");
-                rd.forward(req,resp);
+            if (userValidation.isHaveUserWithUserEmail(userTem.getEmail())){
+                req.setAttribute("errorEmailRegister","<p style =\"color: red\"> User with this email is already register</p>");
+                RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/register.jsp");
+                rd.include(req,resp);
             }
         }
-
     }
 }

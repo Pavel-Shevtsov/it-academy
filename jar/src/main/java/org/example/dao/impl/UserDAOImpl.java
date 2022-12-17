@@ -1,95 +1,73 @@
 package org.example.dao.impl;
-
-import org.example.connection.DataBaseConnection;
-import org.example.connection.FileConnection;
-import org.example.constant.Constant;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import org.example.dao.AbstractJPADAO;
 import org.example.dao.UserDAO;
 import org.example.model.User;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-
-public class UserDAOImpl implements UserDAO, Constant {
-
-    FileConnection connection = new FileConnection();
-    DataBaseConnection dataBaseConnection = new DataBaseConnection();
-    User user = new User();
-
+public class UserDAOImpl extends AbstractJPADAO implements UserDAO {
 
     @Override
-    public User getUserByUserName(String userName) throws IOException, SQLException {
-
-        PreparedStatement preparedStatement;
-
-        try (Connection connection = dataBaseConnection.getConnection()) {
-
-            preparedStatement = connection.prepareStatement(SQL_BY_NAME);
-            preparedStatement.setString(1,userName);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("userName"));
-                user.setPassword(resultSet.getString("password"));
-                user.setRole(resultSet.getString("role"));
-                user.setEmail(resultSet.getString("email"));
-                return user;
-            }
-            preparedStatement.close();
-            resultSet.close();
+    public User getUserByUserName(String userName) {
+        User user;
+        init();
+        TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByUserName",User.class)
+                .setParameter("userName",userName);
+        try {
+             user = namedQuery.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }finally {
+            close();
         }
-        return null;
+        return user;
     }
 
     @Override
-    public User getUserByEmail(String email) throws SQLException {
-        PreparedStatement preparedStatement;
-
-        try (Connection connection = dataBaseConnection.getConnection()) {
-
-            preparedStatement = connection.prepareStatement(SQL_BY_EMAIL);
-            preparedStatement.setString(1,email);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("userName"));
-                user.setPassword(resultSet.getString("password"));
-                user.setRole(resultSet.getString("role"));
-                user.setEmail(resultSet.getString("email"));
-                return user;
-            }
-            preparedStatement.close();
-            resultSet.close();
+    public User getUserByEmail(String email) {
+        User user;
+        init();
+        TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByEmail",User.class)
+                .setParameter("email",email);
+        try {
+            user = namedQuery.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }finally {
+            close();
         }
-        return null;
+        return user;
     }
 
     @Override
-    public User getUserByUserPassword(String password) throws SQLException {
-        PreparedStatement preparedStatement;
-
-        try (Connection connection = dataBaseConnection.getConnection()) {
-
-            preparedStatement = connection.prepareStatement(SQL_BY_PASSWORD);
-            preparedStatement.setString(1,password);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("userName"));
-                user.setPassword(resultSet.getString("password"));
-                user.setRole(resultSet.getString("role"));
-                user.setEmail(resultSet.getString("email"));
-                return user;
-            }
-            preparedStatement.close();
-            resultSet.close();
+    public User getUserByUserPassword(String password) {
+        User user;
+        init();
+        TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByPassword",User.class)
+                .setParameter("password",password);
+        try {
+            user = namedQuery.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }finally {
+            close();
         }
-        return null;
+        return user;
+    }
+
+    @Override
+    public User getUserByIdWithTopic(int id) {
+        User user;
+        init();
+        TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByIdWithTopic",User.class)
+                .setParameter("userId",id);
+        try {
+            user = namedQuery.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }finally {
+            close();
+        }
+        return user;
     }
 }

@@ -2,12 +2,9 @@ package org.example.validation;
 
 import org.example.dao.impl.UserDAOImpl;
 import org.example.model.User;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Optional;
 
-public class UserValidation {
+public class  UserValidation {
     UserDAOImpl userDAO = new UserDAOImpl();
 
 
@@ -16,17 +13,17 @@ public class UserValidation {
         return password.matches(pattern);
     }
 
-   public boolean isHaveUserWithUserName(String userName) throws SQLException, IOException {
+   public boolean isHaveUserWithUserName(String userName){
        Optional<User> user;
        user = Optional.ofNullable(userDAO.getUserByUserName(userName));
        return  user.isPresent();
    }
 
-  public boolean isHaveUserWithUserEmail(String email) throws  SQLException {
+  public boolean isHaveUserWithUserEmail(String email){
       Optional<User> user = Optional.ofNullable(userDAO.getUserByEmail(email));
       return  user.isPresent();
    }
-    public boolean isHaveUserWithUserPassword(String password) throws SQLException {
+    public boolean isHaveUserWithUserPassword(String password){
         Optional<User> user = Optional.ofNullable(userDAO.getUserByUserPassword(password));
         return  user.isPresent();
     }
