@@ -19,9 +19,9 @@ public class DeletePostServlet extends HttpServlet {
         resp.setContentType("text/html");
         PostDAOImpl postDAO = new PostDAOImpl();
         int postId = Integer.parseInt(req.getParameter("idPost"));
-        postDAO.deletePost(postId);
+        postDAO.delete(postId);
 
-        if (postDAO.getPostById(postId)==null){
+        if (postDAO.getById(postId)==null){
             req.setAttribute("deletePost","<p style = \"color: blue\"> Post successfully deleted.</p>");
         }else{
             req.setAttribute("deletePost","<p style = \"color: red\"> Post not deleted.</p>");

@@ -30,7 +30,7 @@ public class CreateTopic extends HttpServlet {
 
         if (topicByTopicName == null) {
             topic.setName(topicName);
-            topicDAO.addTopic(topic);
+            topicDAO.add(topic);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("/welcome");
             req.setAttribute("createTopicSuccessfully", "<p style =\"color: blue\"> Topic created successfully</p>");
             requestDispatcher.include(req, resp);

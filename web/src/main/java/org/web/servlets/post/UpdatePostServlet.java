@@ -21,7 +21,7 @@ public class UpdatePostServlet extends HttpServlet {
         PostDAOImpl postDAO = new PostDAOImpl();
         int postId = Integer.parseInt(req.getParameter("idPost"));
         session.setAttribute("postId", postId);
-        Post postById = postDAO.getPostById(postId);
+        Post postById = postDAO.getById(postId);
         String postName = postById.getName();
         String postText = postById.getText();
         req.setAttribute("postName", postName);
@@ -41,13 +41,13 @@ public class UpdatePostServlet extends HttpServlet {
         String newPostName = req.getParameter("newPostName");
         String newPostText = req.getParameter("newPostText");
 
-        Post postById = postDAO.getPostById(postId);
+        Post postById = postDAO.getById(postId);
         postById.setName(newPostName);
         postById.setText(newPostText);
 
-        postDAO.updatePost(postById);
+        postDAO.update(postById);
 
-        if (postDAO.getPostById(postId).getName().equalsIgnoreCase(newPostName)){
+        if (postDAO.getById(postId).getName().equalsIgnoreCase(newPostName)){
             req.setAttribute("updatePost","<p style =\"color: blue\"> Post successfully updated</p>");
         }else{
             req.setAttribute("updatePost","<p style =\"color: red\"> Post not updated</p>");

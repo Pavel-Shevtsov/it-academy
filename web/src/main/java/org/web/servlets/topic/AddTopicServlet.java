@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.TopicDAOImpl;
 import org.example.dao.impl.UserDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.Topic;
 import org.example.model.User;
 
@@ -25,12 +24,11 @@ public class AddTopicServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         TopicDAOImpl topicDAO = new TopicDAOImpl();
         UserDAOImpl userDAO = new UserDAOImpl();
-        UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
         int userId = (int) session.getAttribute("id");
         int topicId = Integer.parseInt(req.getParameter("id"));
 
         User userByUserName = userDAO.getUserByIdWithTopic(userId);
-        Topic topicById = topicDAO.getTopicById(topicId);
+        Topic topicById = topicDAO.getById(topicId);
 
         List<Topic> topics = userByUserName.getTopics();
         int sizeUpTo = topics.size();
@@ -45,7 +43,7 @@ public class AddTopicServlet extends HttpServlet {
             req.setAttribute("addTopic","<p style = \"color: red\"> Topic not added.</p>");
         }
 
-        userModifyDAO.updateUser(userByUserName);
+        userDAO.update(userByUserName);
         RequestDispatcher rd = req.getRequestDispatcher("/welcome");
         rd.forward(req,resp);
 
