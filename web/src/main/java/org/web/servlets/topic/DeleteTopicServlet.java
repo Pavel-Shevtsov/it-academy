@@ -42,7 +42,7 @@ public class DeleteTopicServlet extends HttpServlet {
             userDAO.update(userById);
         }
             req.setAttribute("deleteTopic","<p style = \"color: blue\"> Topic deleted successfully.</p>");
-            RequestDispatcher rd = req.getRequestDispatcher("/welcome");
+            RequestDispatcher rd = req.getRequestDispatcher(req.getContextPath()+"/welcome");
             rd.forward(req,resp);
 
     }

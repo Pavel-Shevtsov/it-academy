@@ -35,7 +35,7 @@ public class AddPostServlet extends HttpServlet {
         int userId = (int)session.getAttribute("id");
         int topicId = (int) session.getAttribute("topicId");
 
-        postDAO.getByUserTopic(userId,topicId);
+        postDAO.getPostByUserTopic(userId,topicId);
 
         String postName = req.getParameter("postName");
         String postText = req.getParameter("postText");

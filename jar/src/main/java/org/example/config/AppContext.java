@@ -16,7 +16,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan("dao")
+@ComponentScan("org.example")
 @EnableTransactionManagement
 public class AppContext {
 
@@ -29,7 +29,7 @@ public class AppContext {
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPersistenceUnitName("jpa-unit");
-        entityManagerFactory.setPackagesToScan("model");
+        entityManagerFactory.setPackagesToScan("org.example.model");
         entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactory.setJpaProperties(hibernateProperties());
 

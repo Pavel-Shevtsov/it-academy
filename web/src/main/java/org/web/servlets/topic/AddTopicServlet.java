@@ -44,7 +44,7 @@ public class AddTopicServlet extends HttpServlet {
         }
 
         userDAO.update(userByUserName);
-        RequestDispatcher rd = req.getRequestDispatcher("/welcome");
+        RequestDispatcher rd = req.getRequestDispatcher(req.getContextPath()+"/welcome");
         rd.forward(req,resp);
 
     }

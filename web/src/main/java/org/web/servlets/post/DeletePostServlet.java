@@ -26,7 +26,7 @@ public class DeletePostServlet extends HttpServlet {
         }else{
             req.setAttribute("deletePost","<p style = \"color: red\"> Post not deleted.</p>");
         }
-        RequestDispatcher rd = req.getRequestDispatcher("/welcome");
+        RequestDispatcher rd = req.getRequestDispatcher(req.getContextPath()+"/welcome");
         rd.forward(req,resp);
 
     }

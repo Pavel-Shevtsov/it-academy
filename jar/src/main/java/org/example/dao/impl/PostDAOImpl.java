@@ -22,9 +22,9 @@ public class PostDAOImpl extends BaseDAO<Post,Integer> implements PostDAO {
 
 
     @Override
-    public List <Post> getByUserTopic(int userId, int topicId) {
+    public List <Post> getPostByUserTopic(int userId, int topicId) {
         List<Post> posts;
-        TypedQuery<Post> namedQuery = em.createNamedQuery("Post.getByUserTopic",Post.class)
+        TypedQuery<Post> namedQuery = em.createNamedQuery("Post.getPostByUserTopic",Post.class)
                 .setParameter("idTopic",topicId).setParameter("idUser", userId);
         try {
             posts = namedQuery.getResultList();

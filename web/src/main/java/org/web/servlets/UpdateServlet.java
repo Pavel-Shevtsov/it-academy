@@ -54,13 +54,13 @@ public class UpdateServlet extends HttpServlet {
         String oldEmail = req.getParameter("oldEmail");
         String role = (String) session.getAttribute("role");
 
-        User oldUser = null;
-        User updatedUser = new User();
+
+
         boolean validationName = false;
         boolean validationEmail = false;
 
-        oldUser = userDAO.getUserByUserName(oldName);
-        updatedUser.setId(oldUser.getId());
+        User updatedUser = userDAO.getUserByUserName(oldName);
+
 
         if (!newName.equals("")) {
             validationName = userValidation.isHaveUserWithUserName(newName);
@@ -71,8 +71,6 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setUserName(newName);
             }
-        }else{
-            updatedUser.setUserName(oldName);
         }
 
         if (!newPassword.equals("")) {
@@ -92,8 +90,6 @@ public class UpdateServlet extends HttpServlet {
                     rd.forward(req, resp);
                 }
             }
-        }else{
-            updatedUser.setPassword(oldPassword);
         }
 
         if (!newEmail.equals("")) {
@@ -105,17 +101,15 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setEmail(newEmail);
             }
-        } else {
-            updatedUser.setEmail(oldEmail);
-        }
+        } else
 
-        userDAO.update(updatedUser);
+            userDAO.update(updatedUser);
+
         if (oldName.equals(session.getAttribute("name"))){
             req.setAttribute("userUpdate","<p style = \"color: blue\"> User named " + oldName + " " + oldPassword + " " + oldEmail + " updated to " + newName + " " +
                     newPassword + " " + newEmail + " . Please login the app again</p>");
             RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
             rd.forward(req, resp);
-
         }else {
             req.setAttribute("userOtherUpdate","<p style = \"color: blue\"> User named "+ oldName + " " + oldPassword + " " + oldEmail + " updated to " + newName + " " +
                     newPassword + " " + newEmail + "</p>");

@@ -3,77 +3,80 @@ package org.exemple.dao.impl;
 import org.example.config.AppContext;
 import org.example.dao.inter.UserDAO;
 import org.example.model.User;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
-
-import static org.junit.Assert.assertNotNull;
-
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AppContext.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 public class UserDAOTest {
     @Autowired
     UserDAO userDAO;
 
     User testUser = new User();
-    public static final String TEST_USER_NAME = "TESTUSer";
-    public static final String TEST_USER_PASSWORD = "TestPassword007";
-    public static final String TEST_USER_EMAIL = "pavlik@mail.com";
+    public static final String TEST_USER_NAME = "TestUser";
+    public static final String TEST_NEW_USER_NAME ="TestNewName";
+    public static final String TEST_USER_PASSWORD = "TestPass";
+    public static final String TEST_USER_EMAIL = "test@mail.com";
+    public static final String TEST_USER_ROLE = "User";
+    private static int id;
+
 
     @BeforeAll
-    public void setUp(){
+    public void setUpUserTest(){
         testUser.setUserName(TEST_USER_NAME);
         testUser.setPassword(TEST_USER_PASSWORD);
         testUser.setEmail(TEST_USER_EMAIL);
+        testUser.setRole(TEST_USER_ROLE);
+        userDAO.add(testUser);
+        id = userDAO.getUserByUserName(TEST_USER_NAME).getId();
     }
-    @Ignore
+
     @Test
-    public void addUser(){
-         userDAO.add(testUser);
+    public void addUserTest(){
+        Assertions.assertEquals(userDAO.getUserByUserName(TEST_USER_NAME).getUserName(),TEST_USER_NAME);
+    }
+
+    @Test
+    public void getByIDTest(){
+        Assertions.assertEquals(userDAO.getById(id).getUserName(),"TestUser");
+    }
+    @Test
+    public void updateTopicTest(){
         User userByUserName = userDAO.getUserByUserName(TEST_USER_NAME);
-        Assertions.assertEquals(TEST_USER_NAME,testUser.getUserName());
+        userByUserName.setUserName(TEST_NEW_USER_NAME);
+        userDAO.update(userByUserName);
+        Assertions.assertNotNull(userDAO.getUserByUserName(TEST_NEW_USER_NAME));
     }
-    @Test
-    public void deleteUserTest() {
-        userDAO.delete(10);
-        Optional<User> user = Optional.ofNullable(userDAO.getById(10));
-        Assertions.assertFalse(user.isPresent());
-    }
+
     @AfterAll
-    public void destroy(){
-        userDAO.delete(11);
+    public void deleteUserTest() {
+        userDAO.delete(id);
+        Assertions.assertNull(userDAO.getUserByUserName(TEST_NEW_USER_NAME));
     }
 
     @Test
-    @Ignore
-    public void getTest(){
-        Assert.assertEquals(userDAO.getById(1).getUserName(),"user1");
-    }
-
-
-    @Test
-    @Ignore
-    public void getUserWithTopicTest(){
-        User user = userDAO.getUserByIdWithTopic(4);
-        assertNotNull(user.getTopics());
-    }
-
-    @Test
-    @Ignore
     public void getAllUserTest(){
-        assertNotNull(userDAO.allUsers());
+        Assertions.assertNotNull(userDAO.allUsers());
+    }
+
+    @Test
+    public void getUserWithTopicTest(){
+        User user = userDAO.getUserByIdWithTopic(id);
+        Assertions.assertNotNull(user.getTopics());
+    }
+
+    @Test
+    public void getUserByPasswordTest(){
+        Assertions.assertEquals(userDAO.getUserByUserPassword(TEST_USER_PASSWORD).getPassword(),TEST_USER_PASSWORD);
+    }
+
+    @Test
+    public void getUserByEmailTest(){
+        Assertions.assertEquals( userDAO.getUserByEmail(TEST_USER_EMAIL).getEmail(),TEST_USER_EMAIL);
     }
 
  }

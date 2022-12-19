@@ -4,5 +4,5 @@ import org.example.model.Post;
 import java.util.List;
 
 public interface PostDAO extends DAO<Post, Integer> {
-    List <Post> getByUserTopic(int userId, int topicId);
+    List <Post> getPostByUserTopic(int userId, int topicId);
 }

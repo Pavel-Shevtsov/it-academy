@@ -21,7 +21,7 @@
                     <div class= "loginPage">
                                 <div class = "legendLoginPage">
                                         <h1> Login to App</h1>
-                                         <h1>"Topic and Post"</h1>
+                                        <h1>"Topic and Post"</h1>
                                 </div>
                                 <div class= "loginText">
                                     <form action="${pageContext.request.contextPath}/login" method = "post" >
@@ -31,7 +31,7 @@
 
                                                   <p>Password</p>
                                                   <input type="password" name = "password" required = "required">
-                                         </div>
+                                </div>
                                             <input type = "submit", value = "Login">
                                     </form>
                     </div>

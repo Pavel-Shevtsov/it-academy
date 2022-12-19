@@ -31,11 +31,11 @@ public class CreateTopic extends HttpServlet {
         if (topicByTopicName == null) {
             topic.setName(topicName);
             topicDAO.add(topic);
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/welcome");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher(req.getContextPath()+"/welcome");
             req.setAttribute("createTopicSuccessfully", "<p style =\"color: blue\"> Topic created successfully</p>");
             requestDispatcher.include(req, resp);
         } else {
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/welcome");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher(req.getContextPath()+"/welcome");
             req.setAttribute("createTopicError", "<p style =\"color: red\"> Sorry, there is a topic with this topic name</p>");
             requestDispatcher.forward(req, resp);
         }
