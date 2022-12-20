@@ -29,17 +29,6 @@ public class UserDAOImpl extends BaseDAO <User,Integer> implements UserDAO {
     }
 
     @Override
-    public User getById(Integer id) {
-        User userById;
-        try {
-            userById = em.find(User.class,id);
-        }catch (NoResultException e){
-            return null;
-        }
-        return userById;
-    }
-
-    @Override
     public User getUserByUserName(String userName) {
         User user;
         TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByUserName",User.class)
