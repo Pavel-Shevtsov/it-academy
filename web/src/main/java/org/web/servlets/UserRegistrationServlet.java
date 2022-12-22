@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.UserDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.User;
 import org.example.validation.UserValidation;
 import java.io.IOException;
@@ -28,7 +27,6 @@ public class UserRegistrationServlet extends HttpServlet {
         User user = new User();
         PrintWriter pw = resp.getWriter();
         UserDAOImpl userDAO = new UserDAOImpl();
-        UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
         UserValidation userValidation = new UserValidation();
 
         resp.setContentType("text/html");
@@ -59,7 +57,7 @@ public class UserRegistrationServlet extends HttpServlet {
                 user.setEmail(userTem.getEmail());
                 user.setRole(userTem.getRole());
 
-                userModifyDAO.addUser(user);
+                userDAO.add(user);
                 req.setAttribute("createNewUser", "<p style = \"color: blue\"> User successfully registered." +
                         "Please login to account </p>");
 

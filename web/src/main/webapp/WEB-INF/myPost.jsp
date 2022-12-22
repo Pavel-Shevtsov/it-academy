@@ -40,13 +40,10 @@
                                             <h2>My posts ${topicName}</h2>
                                             <c:forEach var="post" items="${posts}">
                                                 <div class="myPostPage">
-                                                <p class="namePost">Name post: <c:out value ="${post.name}"/></p>
-                                                <a class="modifyLink" href = "${pageContext.request.contextPath}/updatePost?idPost=${post.id}"> Update </a>
-                                                <a class="modifyLink" href = "${pageContext.request.contextPath}/deletePost?idPost=${post.id}" > Delete </a>
-                                                <p class="textPost">Text post: <c:out value ="${post.text}"/></p>
-
-
-
+                                                    <p class="namePost">Name post: <c:out value ="${post.name}"/></p>
+                                                    <a class="modifyLink" href = "${pageContext.request.contextPath}/updatePost?idPost=${post.id}"> Update </a>
+                                                    <a class="modifyLink" href = "${pageContext.request.contextPath}/deletePost?idPost=${post.id}" > Delete </a>
+                                                    <p class="textPost">Text post: <c:out value ="${post.text}"/></p>
                                                 </div>
 
                                             </c:forEach>

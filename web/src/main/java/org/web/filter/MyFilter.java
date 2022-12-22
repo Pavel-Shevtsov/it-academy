@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.TopicDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
+import org.example.dao.impl.UserDAOImpl;
 import org.example.model.Topic;
 import org.example.model.User;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @WebFilter(urlPatterns = {"/welcome","/users","/update","/createTopic","/allFreTopics","/addTopic"})
 public class MyFilter implements Filter {
 
-    UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
+    UserDAOImpl userDAO = new UserDAOImpl();
     TopicDAOImpl topicDAO = new TopicDAOImpl();
     private FilterConfig config = null;
     private boolean active = false;
@@ -53,7 +53,7 @@ public class MyFilter implements Filter {
 
             if (role.equalsIgnoreCase("Admin")){
                 List <User> allUsers ;
-                allUsers = userModifyDAO.allUsers();
+                allUsers = userDAO.allUsers();
                 allUsers.forEach(u ->{
                     if (!u.getUserName().equals(name)){
                         users.add(u);

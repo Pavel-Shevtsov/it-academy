@@ -20,7 +20,7 @@ public class LogoutServlet extends HttpServlet {
         if (session!=null) {
             session.invalidate();
         }
-        RequestDispatcher rd = req.getRequestDispatcher("/login");
+        RequestDispatcher rd = req.getRequestDispatcher(req.getContextPath()+"/login");
         rd.include(req,resp);
     }
 

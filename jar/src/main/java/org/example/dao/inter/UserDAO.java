@@ -1,7 +1,10 @@
-package org.example.dao;
+package org.example.dao.inter;
 import org.example.model.User;
 
-public interface UserDAO {
+import java.util.List;
+
+public interface UserDAO extends DAO<User,Integer> {
+    List<User> allUsers();
     User getUserByUserName(String userName);
     User getUserByEmail(String email);
     User getUserByUserPassword(String password);

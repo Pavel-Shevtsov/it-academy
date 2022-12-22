@@ -33,27 +33,27 @@
 
                     <form action="${pageContext.request.contextPath}/update" method = "get" >
                         <table>
-                        <thead>
-                            <tr>
-                              <th scope="col">Name</th>
-                              <th scope="col">Password</th>
-                              <th scope="col">Email</th>
-                              <th scope="col">Role</th>
-                              <th scope="col">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <c:forEach var="user" items="${otherUsers}">
+                            <thead>
                                 <tr>
-                                    <td><c:out value ="${user.userName}"/></td>
-                                    <td><c:out value ="${user.password}"/></td>
-                                    <td><c:out value ="${user.email}"/></td>
-                                    <td><c:out value ="${user.role}"/></td>
-                                <td><a class="action" href = "${pageContext.request.contextPath}/update?id=${user.id}" > Update
-                                <a class="action" href = "${pageContext.request.contextPath}/delete?id=${user.id}" >   Delete</td>
-                                 </tr>
-                                 </tbody>
-                            </c:forEach>
+                                  <th scope="col">Name</th>
+                                  <th scope="col">Password</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Role</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                                    <tbody>
+                                      <c:forEach var="user" items="${otherUsers}">
+                                          <tr>
+                                              <td><c:out value ="${user.userName}"/></td>
+                                              <td><c:out value ="${user.password}"/></td>
+                                              <td><c:out value ="${user.email}"/></td>
+                                              <td><c:out value ="${user.role}"/></td>
+                                          <td><a class="action" href = "${pageContext.request.contextPath}/update?id=${user.id}" > Update
+                                          <a class="action" href = "${pageContext.request.contextPath}/delete?id=${user.id}" >   Delete</td>
+                                           </tr>
+                                      </c:forEach>
+                                    </tbody>
                         </table>
                     </form>
             </body>

@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.UserDAOImpl;
+import org.example.dao.inter.UserDAO;
 import org.example.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -51,7 +54,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("email", user.getEmail());
             }
 
-            resp.sendRedirect("/web/welcome");
+            resp.sendRedirect(req.getContextPath()+"/welcome");
 
         }else {
             req.setAttribute("errorPasswordUsername","<p style =\"color: red\"> Sorry username or password error</p>");

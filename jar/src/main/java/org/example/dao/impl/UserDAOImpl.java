@@ -1,24 +1,42 @@
 package org.example.dao.impl;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import org.example.dao.AbstractJPADAO;
-import org.example.dao.UserDAO;
+import jakarta.transaction.Transactional;
+import org.example.dao.inter.UserDAO;
 import org.example.model.User;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-public class UserDAOImpl extends AbstractJPADAO implements UserDAO {
+@Repository
+@Transactional
+public class UserDAOImpl extends BaseDAO <User,Integer> implements UserDAO {
+
+    public UserDAOImpl() {
+        super();
+        clazz = User.class;
+    }
+
+    @Override
+    public List<User> allUsers() {
+        List<User>users;
+        TypedQuery<User> namedQuery = em.createNamedQuery("User.getAll",User.class);
+        try {
+            users = namedQuery.getResultList();
+        }catch (NoResultException e){
+            return null;
+        }
+        return users;
+    }
 
     @Override
     public User getUserByUserName(String userName) {
         User user;
-        init();
         TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByUserName",User.class)
                 .setParameter("userName",userName);
         try {
              user = namedQuery.getSingleResult();
         }catch (NoResultException e){
             return null;
-        }finally {
-            close();
         }
         return user;
     }
@@ -26,15 +44,12 @@ public class UserDAOImpl extends AbstractJPADAO implements UserDAO {
     @Override
     public User getUserByEmail(String email) {
         User user;
-        init();
         TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByEmail",User.class)
                 .setParameter("email",email);
         try {
             user = namedQuery.getSingleResult();
         }catch (NoResultException e){
             return null;
-        }finally {
-            close();
         }
         return user;
     }
@@ -42,15 +57,13 @@ public class UserDAOImpl extends AbstractJPADAO implements UserDAO {
     @Override
     public User getUserByUserPassword(String password) {
         User user;
-        init();
+
         TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByPassword",User.class)
                 .setParameter("password",password);
         try {
             user = namedQuery.getSingleResult();
         }catch (NoResultException e){
             return null;
-        }finally {
-            close();
         }
         return user;
     }
@@ -58,15 +71,12 @@ public class UserDAOImpl extends AbstractJPADAO implements UserDAO {
     @Override
     public User getUserByIdWithTopic(int id) {
         User user;
-        init();
         TypedQuery<User> namedQuery = em.createNamedQuery("User.getUserByIdWithTopic",User.class)
                 .setParameter("userId",id);
         try {
             user = namedQuery.getSingleResult();
         }catch (NoResultException e){
             return null;
-        }finally {
-            close();
         }
         return user;
     }

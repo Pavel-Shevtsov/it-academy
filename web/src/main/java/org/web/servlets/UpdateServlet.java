@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.dao.impl.UserDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.User;
 import org.example.validation.UserValidation;
 
@@ -16,7 +15,6 @@ import java.io.IOException;
 
 @WebServlet(name = "UpdateServlet", urlPatterns = "/update")
 public class UpdateServlet extends HttpServlet {
-    UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
     UserValidation userValidation = new UserValidation();
     UserDAOImpl userDAO = new UserDAOImpl();
 
@@ -34,7 +32,7 @@ public class UpdateServlet extends HttpServlet {
             rd.forward(req, resp);
         } else {
             User userTem;
-            userTem = userModifyDAO.getUserById(Integer.parseInt(userId));
+            userTem = userDAO.getById(Integer.parseInt(userId));
             req.setAttribute("id", userTem.getId());
             req.setAttribute("name", userTem.getUserName());
             req.setAttribute("oldPassword", userTem.getPassword());
@@ -56,13 +54,13 @@ public class UpdateServlet extends HttpServlet {
         String oldEmail = req.getParameter("oldEmail");
         String role = (String) session.getAttribute("role");
 
-        User oldUser = null;
-        User updatedUser = new User();
+
+
         boolean validationName = false;
         boolean validationEmail = false;
 
-        oldUser = userDAO.getUserByUserName(oldName);
-        updatedUser.setId(oldUser.getId());
+        User updatedUser = userDAO.getUserByUserName(oldName);
+
 
         if (!newName.equals("")) {
             validationName = userValidation.isHaveUserWithUserName(newName);
@@ -73,8 +71,6 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setUserName(newName);
             }
-        }else{
-            updatedUser.setUserName(oldName);
         }
 
         if (!newPassword.equals("")) {
@@ -94,8 +90,6 @@ public class UpdateServlet extends HttpServlet {
                     rd.forward(req, resp);
                 }
             }
-        }else{
-            updatedUser.setPassword(oldPassword);
         }
 
         if (!newEmail.equals("")) {
@@ -107,17 +101,15 @@ public class UpdateServlet extends HttpServlet {
             } else {
                 updatedUser.setEmail(newEmail);
             }
-        } else {
-            updatedUser.setEmail(oldEmail);
-        }
+        } else
 
-        userModifyDAO.updateUser(updatedUser);
+            userDAO.update(updatedUser);
+
         if (oldName.equals(session.getAttribute("name"))){
             req.setAttribute("userUpdate","<p style = \"color: blue\"> User named " + oldName + " " + oldPassword + " " + oldEmail + " updated to " + newName + " " +
                     newPassword + " " + newEmail + " . Please login the app again</p>");
             RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
             rd.forward(req, resp);
-
         }else {
             req.setAttribute("userOtherUpdate","<p style = \"color: blue\"> User named "+ oldName + " " + oldPassword + " " + oldEmail + " updated to " + newName + " " +
                     newPassword + " " + newEmail + "</p>");

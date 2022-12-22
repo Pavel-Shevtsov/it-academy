@@ -24,8 +24,8 @@ public class PostsServlet extends HttpServlet {
         int topicId = Integer.parseInt(req.getParameter("idTopic"));
         session.setAttribute("topicId", topicId);
         TopicDAOImpl topicDAO = new TopicDAOImpl();
-        Topic topicById = topicDAO.getTopicById(topicId);
-        List<Post> userPost = postDAO.getByUserTopic(userId,topicId);
+        Topic topicById = topicDAO.getById(topicId);
+        List<Post> userPost = postDAO.getPostByUserTopic(userId,topicId);
 
         req.setAttribute("topicName", topicById.getName());
         req.setAttribute("posts",userPost);

@@ -16,7 +16,7 @@
     </head>
             <body>
                     <div class="panel">
-                    <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
+                        <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                           <div class="dropDownUser">
                               <button class="dropBtn">${name}</button>
                                   <div class="dropDownUser-content" style="right:20;">

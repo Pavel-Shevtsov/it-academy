@@ -14,7 +14,7 @@
     </head>
             <body>
                     <div class="panel">
-                    <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
+                        <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                           <div class="dropDownUser">
                               <button class="dropBtn">${name}</button>
                                   <div class="dropDownUser-content" style="right:20;">
@@ -32,14 +32,13 @@
                           </div>
                     </div>
 
-
                      <form action="${pageContext.request.contextPath}/updatePost" method = "post" >
                         <div class="addPostPage">
-                        <h1>Add Post</h1>
+                            <h1>Add Post</h1>
                             	<h3>Name post </h2>
-                            	<input type="text" class ="namePost" name="newPostName" value = ${postName} >
+                            	    <input type="text" class ="namePost" name="newPostName" value = ${postName} >
                             	<h3>Text </h2>
-                            	<textarea name = "newPostText"  >   ${postText}</textarea>
+                            	    <textarea name = "newPostText"  >   ${postText}</textarea>
                             	<input type = "submit", value = "Update">
                         </div>
                      </form>

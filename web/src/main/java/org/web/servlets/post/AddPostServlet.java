@@ -7,10 +7,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.dao.TopicModifyDAO;
 import org.example.dao.impl.PostDAOImpl;
 import org.example.dao.impl.TopicDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
+import org.example.dao.impl.UserDAOImpl;
 import org.example.model.Post;
 
 
@@ -30,13 +29,13 @@ public class AddPostServlet extends HttpServlet {
 
         resp.setContentType("text/html");
         PostDAOImpl postDAO = new PostDAOImpl();
-        UserModifyDAOImpl userModifyDAO = new UserModifyDAOImpl();
+        UserDAOImpl userDAO = new UserDAOImpl();
         TopicDAOImpl topicDAO = new TopicDAOImpl();
         HttpSession session = req.getSession(false);
         int userId = (int)session.getAttribute("id");
         int topicId = (int) session.getAttribute("topicId");
 
-        postDAO.getByUserTopic(userId,topicId);
+        postDAO.getPostByUserTopic(userId,topicId);
 
         String postName = req.getParameter("postName");
         String postText = req.getParameter("postText");
@@ -46,9 +45,9 @@ public class AddPostServlet extends HttpServlet {
                 Post post = new Post();
                 post.setName(postName);
                 post.setText(postText);
-                post.setUser(userModifyDAO.getUserById(userId));
-                post.setTopic(topicDAO.getTopicById(topicId));
-                postDAO.addPost(post);
+                post.setUser(userDAO.getById(userId));
+                post.setTopic(topicDAO.getById(topicId));
+                postDAO.add(post);
             }else{
                 req.setAttribute("addPost","<p style = \"color: red\"> Post is not added, you can not add a post without text.</p>");
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/myPost.jsp");

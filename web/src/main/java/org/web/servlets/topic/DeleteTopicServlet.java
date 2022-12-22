@@ -7,10 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.dao.UserModifyDAO;
 import org.example.dao.impl.TopicDAOImpl;
 import org.example.dao.impl.UserDAOImpl;
-import org.example.dao.impl.UserModifyDAOImpl;
 import org.example.model.Topic;
 import org.example.model.User;
 
@@ -27,26 +25,24 @@ public class DeleteTopicServlet extends HttpServlet {
         int userId = (int) session.getAttribute("id");
         TopicDAOImpl topicDAO = new TopicDAOImpl();
         UserDAOImpl userDAO = new UserDAOImpl();
-        UserModifyDAO userModifyDAO = new UserModifyDAOImpl();
-
         String topicId = req.getParameter("id");
+
         if (topicId!=null) {
-            Topic topicById = topicDAO.getTopicById(Integer.parseInt(topicId));
+            Topic topicById = topicDAO.getById(Integer.parseInt(topicId));
             User userById = userDAO.getUserByIdWithTopic(userId);
             int indexTopicInList = -1;
             List<Topic> userTopics = userById.getTopics();
             for (Topic topic : userTopics) {
                 if (topic.getName().equals(topicById.getName())) {
                     indexTopicInList = userTopics.indexOf(topic);
-
                 }
 
             }
             userTopics.remove(indexTopicInList);
-            userModifyDAO.updateUser(userById);
+            userDAO.update(userById);
         }
             req.setAttribute("deleteTopic","<p style = \"color: blue\"> Topic deleted successfully.</p>");
-            RequestDispatcher rd = req.getRequestDispatcher("/welcome");
+            RequestDispatcher rd = req.getRequestDispatcher(req.getContextPath()+"/welcome");
             rd.forward(req,resp);
 
     }

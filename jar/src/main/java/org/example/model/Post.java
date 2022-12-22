@@ -14,7 +14,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Post.getAll", query = "SELECT p from Post p"),
         @NamedQuery(name = "Post.getPostByName", query = "SELECT p from Post p where p.name = :name"),
         @NamedQuery(name = "Post.getTopicById", query = "SELECT p from Post p where p.id = :id"),
-        @NamedQuery(name = "Post.getByUserTopic",query = "SELECT p from Post p where p.topic.id = :idTopic and p.user.id = :idUser")
+        @NamedQuery(name = "Post.getPostByUserTopic",query = "SELECT p from Post p where p.topic.id = :idTopic and p.user.id = :idUser")
 })
 public class Post implements Serializable {
     @Id
@@ -24,11 +24,11 @@ public class Post implements Serializable {
     private String name;
     @Column(unique = true,nullable = false)
     private String text;
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "topic_id")
     private Topic topic;
 }

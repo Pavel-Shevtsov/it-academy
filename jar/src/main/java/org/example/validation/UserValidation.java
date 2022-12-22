@@ -7,7 +7,6 @@ import java.util.Optional;
 public class  UserValidation {
     UserDAOImpl userDAO = new UserDAOImpl();
 
-
     public boolean isPasswordValidate(String password){
         String pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
         return password.matches(pattern);
@@ -23,8 +22,4 @@ public class  UserValidation {
       Optional<User> user = Optional.ofNullable(userDAO.getUserByEmail(email));
       return  user.isPresent();
    }
-    public boolean isHaveUserWithUserPassword(String password){
-        Optional<User> user = Optional.ofNullable(userDAO.getUserByUserPassword(password));
-        return  user.isPresent();
-    }
 }
