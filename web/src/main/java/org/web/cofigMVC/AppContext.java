@@ -1,8 +1,12 @@
-package org.example.config;
+package org.web.cofigMVC;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -16,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan("org.example")
+@ComponentScan(basePackages = {"org.example.dao","org.web","org.web.controllers"})
 @EnableTransactionManagement
 public class AppContext {
 
@@ -32,7 +36,6 @@ public class AppContext {
         entityManagerFactory.setPackagesToScan("org.example.model");
         entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactory.setJpaProperties(hibernateProperties());
-
         return entityManagerFactory;
     }
 
@@ -44,7 +47,6 @@ public class AppContext {
         properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         properties.put("hibernate.jdbc.batch_size", environment.getRequiredProperty("hibernate.jdbc.batch_size"));
         properties.put("hibernate.timeout", environment.getRequiredProperty("hibernate.timeout"));
-
         return properties;
     }
 
@@ -55,7 +57,6 @@ public class AppContext {
         dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
         dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-
         return dataSource;
     }
 
