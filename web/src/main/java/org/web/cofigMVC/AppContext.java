@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan(basePackages = {"org.example.dao","org.web","org.web.controllers"})
+@ComponentScan(basePackages = {"org.example.dao","org.web","org.web.controllers","org.web.interceptors","org.web.filters","org.web.service"})
 @EnableTransactionManagement
 public class AppContext {
 
@@ -66,5 +66,26 @@ public class AppContext {
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return jpaTransactionManager;
+    }
+    @Bean
+    public JavaMailSenderImpl getJavaMailSenderImpl(){
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setPort(587);
+        javaMailSender.setUsername("pahaschewzow@gmail.com");
+        javaMailSender.setPassword("euwboysdzimtadqy");
+        javaMailSender.setJavaMailProperties(javaMailSenderProperties());
+        return javaMailSender;
+    }
+
+    private Properties javaMailSenderProperties(){
+        Properties properties = new Properties();
+        properties.put("mail.transport.protocol","smtp");
+        properties.put("mail.smtp.auth","true");
+        properties.put("mail.smtp.host","smtp.gmail.com");
+        properties.put("mail.smtp.starttls.enable","true");
+        properties.put("mail.smtp.starttls.required","true");
+        properties.put("mail.debug","true");
+        properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        return properties;
     }
 }

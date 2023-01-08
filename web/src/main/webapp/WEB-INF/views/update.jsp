@@ -14,23 +14,31 @@
 
                         </div>
                             <div class= "updateText">
-                                    <form action="${pageContext.request.contextPath}/update" method = "post" >
+                            <form action="uploadPhoto" enctype="multipart/form-data" method="post">
+
+                                  <p>Choose your photo</p>
+                                  <td><img src="${pageContext.request.contextPath}/user/viewImage" width="100"</td>
+                                  <p><input type="file" name="fileData" >
+                                  <input type="submit" value="Download"></p>
+                            </form>
+                                    <form action="${pageContext.request.contextPath}/user/update" method = "post" >
                                         <div class="text-field">
                                             <p>Old Name</p>
-                                            <input class="text-readonly" type = "text" name="oldName" value="${name}" readonly>
+                                            <input class="text-readonly" type = "text" name="username" value="${updateUserForm.username}" readonly>
                                             <p>New Name</p>
-                                            <input type="text" name = "newName" >
+                                            <input type="text" name = "newUsername" >
                                             <p>Old Password</p>
-                                            <input class="text-readonly" type = "text" name="oldPassword" value="${oldPassword}" readonly>
+                                            <input class="text-readonly" type = "text" name="password" value="${updateUserForm.password}" readonly>
                                             <p>New Password</p>
                                             <input type="password" name = "newPassword" >
                                             <p> Old email </p>
-                                            <input class="text-readonly" type = "text" name="oldEmail" value="${email}"readonly>
+                                            <input class="text-readonly" type = "text" name="email" value="${updateUserForm.email}"readonly>
                                             <p> New Email </p>
                                             <input type="email" name = "newEmail" >
                                         </div>
                                         <input type = "submit", value = "Update">
                                     </form>
+
 
                             </div>
                             <button onclick = "location.href = '${pageContext.request.contextPath}/welcome' ">Back </button>

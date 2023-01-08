@@ -6,14 +6,11 @@ import jakarta.transaction.Transactional;
 import org.example.dao.inter.PostDAO;
 import org.example.model.Post;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 
 @Repository
 @Transactional
-public class PostDAOImpl extends BaseDAO<Post,Integer> implements PostDAO {
-
+public class PostDAOImpl extends BaseDAO <Post,Integer> implements PostDAO {
 
     public PostDAOImpl() {
         super();

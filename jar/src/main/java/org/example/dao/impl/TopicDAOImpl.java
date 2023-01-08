@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class TopicDAOImpl extends BaseDAO<Topic,Integer> implements TopicDAO {
+public class TopicDAOImpl extends BaseDAO <Topic,Integer> implements TopicDAO {
 
     public TopicDAOImpl() {
         super();

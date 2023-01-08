@@ -21,15 +21,15 @@
                               <button class="dropBtn">${name}</button>
                                   <div class="dropDownUser-content" style="right:20;">
                                       <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
-                                      <p><a href = '${pageContext.request.contextPath}/update'>Update</a></p>
+                                      <p><a href = '${pageContext.request.contextPath}/user/update?id=${id}'>Update</a></p>
                                       <c:if test="${role.equals('Admin')}">
-                                      <p><a href ='${pageContext.request.contextPath}/users'>All Users</a></p>
-                                      <p><a href ='${pageContext.request.contextPath}/createTopic'>Create Topic</a></p>
+                                      <p><a href ='${pageContext.request.contextPath}/user/users'>All Users</a></p>
+                                      <p><a href ='${pageContext.request.contextPath}/topic/create'>Create Topic</a></p>
                                       </c:if>
                                       <c:if test="${role.equals('User')}">
-                                      <p><a href ='${pageContext.request.contextPath}/allFreeTopics'>Add Topic</a></p>
+                                      <p><a href ='${pageContext.request.contextPath}/topic/add'>Add Topic</a></p>
                                       </c:if>
-                                      <p><a href = '${pageContext.request.contextPath}/logout' >Logout</a></p>
+                                      <p><a href = '${pageContext.request.contextPath}/user/logout' >Logout</a></p>
                                   </div>
                           </div>
                     </div>
@@ -46,7 +46,7 @@
                                     <c:forEach var="topic" items="${freeTopics}">
                                         <tr>
                                             <td><c:out value ="${topic.name}"/></td>
-                                            <td><a class="action" href = "${pageContext.request.contextPath}/addTopic?id=${topic.id}" > Add</td>
+                                            <td><a class="action" href = "${pageContext.request.contextPath}/topic/add?id=${topic.id}" > Add</td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>

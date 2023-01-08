@@ -19,10 +19,10 @@
                     <button class="dropBtn">${name}</button>
                         <div class="dropdownUser-content" style="right:20;" >
                             <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
-                            <p><a href = '${pageContext.request.contextPath}/update'>Update</a></p>
-                            <p><a href ='${pageContext.request.contextPath}/users'>All Users</a></p>
-                            <p><a href ='${pageContext.request.contextPath}/createTopic'>Create Topic</a></p>
-                            <p><a href = '${pageContext.request.contextPath}/logout' >Logout</a></p>
+                            <p><a href = '${pageContext.request.contextPath}/user/update?id=${id}'>Update</a></p>
+                            <p><a href ='${pageContext.request.contextPath}/user/users'>All Users</a></p>
+                            <p><a href ='${pageContext.request.contextPath}/topic/create'>Create Topic</a></p>
+                            <p><a href = '${pageContext.request.contextPath}/user/logout' >Logout</a></p>
                         </div>
                     </div>
             </div>
@@ -31,7 +31,7 @@
                     ${updateUserPassword}
                 </div>
 
-                    <form action="${pageContext.request.contextPath}/update" method = "get" >
+                    <form action="${pageContext.request.contextPath}/user/update" method = "get" >
                         <table>
                             <thead>
                                 <tr>
@@ -49,8 +49,8 @@
                                               <td><c:out value ="${user.password}"/></td>
                                               <td><c:out value ="${user.email}"/></td>
                                               <td><c:out value ="${user.role}"/></td>
-                                          <td><a class="action" href = "${pageContext.request.contextPath}/update?id=${user.id}" > Update
-                                          <a class="action" href = "${pageContext.request.contextPath}/delete?id=${user.id}" >   Delete</td>
+                                          <td><a class="action" href = "${pageContext.request.contextPath}/user/update?id=${user.id}" > Update
+                                          <a class="action" href = "${pageContext.request.contextPath}/user/delete?id=${user.id}" >   Delete</td>
                                            </tr>
                                       </c:forEach>
                                     </tbody>

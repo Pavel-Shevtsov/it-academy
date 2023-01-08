@@ -21,7 +21,19 @@
                                        <h1> Registration <h1>
                                </div>
                                <div class= "registrationText">
-                                   <form action="${pageContext.request.contextPath}/register" method = "post" >
+                                <form action="${pageContext.request.contextPath}/user/uploadPhoto" enctype="multipart/form-data" method="post">
+                                      <p>Choose your photo</p>
+                                      <tr>
+                                      <img src="${pageContext.request.contextPath}/user/viewImage" width="100"
+                                      </tr>
+                                      <p><input type="file" name="fileData" ></p>
+                                      <input type="submit" value="Download"></p>
+                                 </form>
+
+
+
+
+                                   <form action="${pageContext.request.contextPath}/addUser" method = "post" >
                                         <div class="text-field">
                                                  <p>UserName</p>
                                                  <h2><input type="text" name = "username" required = "required"></h2>
@@ -33,9 +45,13 @@
                                                  <p><input type="email" name = "email" required = "required"><p>
                                         </div>
                                                   <input type = "submit", value = "Registration">
-                                   </form>
+
+
+                                        </form>
+
+
                                </div>
-                            <button onclick = "location.href = '${pageContext.request.contextPath}/login' " >Back</button>
+                            <button onclick = "location.href = '${pageContext.request.contextPath}' " >Back</button>
                    </div>
             </body>
     </html>

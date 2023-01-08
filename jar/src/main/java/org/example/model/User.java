@@ -50,6 +50,10 @@ public class User implements Serializable {
     @ToString.Exclude
     private List<Post> posts;
 
+    @Lob
+    @Column(name = "image",columnDefinition="mediumblob")
+    private byte[] image;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

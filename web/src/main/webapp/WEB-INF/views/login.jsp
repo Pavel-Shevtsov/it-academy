@@ -35,6 +35,6 @@
                                             <input type = "submit", value = "Login">
                                     </form>
                     </div>
-                    <button onclick = "location.href = '${pageContext.request.contextPath}/register' " >Registration</button>
+                      <button onclick = "location.href = '${pageContext.request.contextPath}' " >Back</button>
             </body>
     </html>
