@@ -34,7 +34,7 @@ public class User implements Serializable {
     private String password;
     @Column(unique = true,nullable = false,length = 40)
     private String email;
-    @Column(nullable = false,length = 6, columnDefinition = "User")
+    @Column(nullable = false,length = 6)
     private String role;
 
     @ManyToMany(targetEntity = Topic.class,cascade = {CascadeType.ALL})

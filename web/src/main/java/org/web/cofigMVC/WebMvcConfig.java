@@ -15,7 +15,7 @@ import org.web.interceptor.UserInterceptor;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"org.web.controllers"})
+@ComponentScan(basePackages = {"org.web"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean

@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements EmailService  {
     @Autowired
-    private JavaMailSender jEmailSender;
+    private JavaMailSender javaMailSender;
 
     @Override
-    public void sendEmail(String toAddress, String fromAddress, String subject, String msgBody) {
+    public void sendEmail(String toAddress, String fromAddress, String subject, String messageBody) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromAddress);
         message.setTo(toAddress);
-        message.setText(msgBody);
+        message.setText(messageBody);
         message.setSubject(subject);
-        jEmailSender.send(message);
+        javaMailSender.send(message);
     }
 }

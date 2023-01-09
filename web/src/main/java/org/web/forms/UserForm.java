@@ -29,6 +29,5 @@ public class UserForm{
         this.email = user.getEmail();
         this.role = user.getRole();
         this.image = user.getImage();
-
     }
 }

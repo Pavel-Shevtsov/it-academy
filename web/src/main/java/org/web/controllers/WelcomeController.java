@@ -28,7 +28,7 @@ public class WelcomeController {
         ModelAndView modelAndView;
         HttpSession session = request.getSession(false);
         String role = (String) session.getAttribute("role");
-        if (role.equals("Admin")){
+        if (role.equalsIgnoreCase("Admin")){
             List<Topic> allTopicsList = topicDAO.allTopic();
             modelAndView = new ModelAndView("welcome").addObject("allTopics", allTopicsList);
         }else{

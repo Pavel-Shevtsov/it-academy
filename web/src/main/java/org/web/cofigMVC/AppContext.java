@@ -20,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan(basePackages = {"org.example.dao","org.web","org.web.controllers","org.web.interceptors","org.web.filters","org.web.service"})
+@ComponentScan(basePackages = {"org.example.dao","org.web"})
 @EnableTransactionManagement
 public class AppContext {
 
