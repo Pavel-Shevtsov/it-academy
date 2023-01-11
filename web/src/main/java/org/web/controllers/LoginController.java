@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.web.forms.UserForm;
 import org.web.service.EmailService;
+import jakarta.activation.spi.MimeTypeRegistryProvider;
 
 import java.io.IOException;
 
