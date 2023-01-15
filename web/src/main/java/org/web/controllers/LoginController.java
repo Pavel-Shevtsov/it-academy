@@ -1,6 +1,5 @@
 package org.web.controllers;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -23,8 +22,6 @@ public class LoginController {
 
     @Autowired
     UserDAO userDAO;
-
-
 
     @GetMapping(value = {"/login"})
     public ModelAndView preLogin(){

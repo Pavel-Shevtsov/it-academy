@@ -4,7 +4,10 @@
     <html>
     <head>
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
-
+    <style>
+        <%@include file="/WEB-INF/style/styleBody.css"%>
+        <%@include file="/WEB-INF/style/startPage.css"%>
+    </style>
     <title>Start page</title>
     <head>
     </head>

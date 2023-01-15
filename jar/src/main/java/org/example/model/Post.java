@@ -24,11 +24,11 @@ public class Post implements Serializable {
     private String name;
     @Column(unique = true,nullable = false)
     private String text;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "topic_id")
     private Topic topic;
 }

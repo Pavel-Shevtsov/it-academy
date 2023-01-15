@@ -4,7 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.SneakyThrows;
+import org.example.dao.inter.PostDAO;
+import org.example.dao.inter.TopicDAO;
 import org.example.dao.inter.UserDAO;
+import org.example.model.Topic;
 import org.example.model.User;
 
 import org.example.validation.UserValidation;
@@ -25,6 +28,10 @@ public class UserController {
 
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    TopicDAO topicDAO;
+    @Autowired
+    PostDAO postDAO;
 
     @GetMapping(value = {"/update"})
     public ModelAndView preUpdate(@RequestParam("id") int userId,HttpServletRequest request) {
@@ -33,11 +40,13 @@ public class UserController {
         return new ModelAndView("update").addObject("updateUserForm", updateUserForm);
     }
 
+    @SneakyThrows
     @PostMapping(value = {"/update"})
-    public ModelAndView postUpdate(@ModelAttribute("updateUserForm") UserForm updateUserForm, HttpServletRequest request) {
-        UserValidation userValidation = new UserValidation();
+    public ModelAndView postUpdate(@ModelAttribute("updateUserForm") UserForm updateUserForm, HttpServletRequest request, HttpServletResponse response) {
+
+        UserValidation userValidation = null;
         HttpSession session = request.getSession(false);
-        ModelAndView modelAndView;
+        ModelAndView modelAndView = null;
         User sessionUser = (User) session.getAttribute("user");
 
         User updatedUser = userDAO.getById(updateUserForm.getId());
@@ -95,12 +104,7 @@ public class UserController {
                             updateUserForm.getNewPassword() + " " +
                             updateUserForm.getNewEmail() + " . Please login the app again</p>");
         } else {
-            modelAndView = new ModelAndView("welcome")
-                    .addObject("userUpdate", "<p style = \"color: blue\"> User named " + updateUserForm.getUsername() + " " +
-                            updateUserForm.getPassword() + " " + updateUserForm.getEmail() +
-                            " updated to " + updateUserForm.getNewUsername() + " " +
-                            updateUserForm.getNewPassword() + " " +
-                            updateUserForm.getNewEmail() + ".");
+            response.sendRedirect(request.getContextPath()+ "/user/users");
         }
         return modelAndView;
     }
@@ -108,12 +112,19 @@ public class UserController {
     @GetMapping(value = {"/delete"})
     public void postUserDelete(@ModelAttribute("id") int userId,HttpServletRequest request, HttpServletResponse response) throws IOException {
         User sessionUser = (User) request.getSession().getAttribute("user");
-        userDAO.delete(userId);
             if (sessionUser.getRole().equalsIgnoreCase("Admin")){
+                User userByIdWithTopic = userDAO.getUserByIdWithTopic(userId);
+                List<Topic> topics = userByIdWithTopic.getTopics();
+                if (topics.size()!=0) {
+                    for (int i = 0; i < topics.size(); i++) {
+                        int topicId = topics.get(i).getId();
+                        postDAO.deleteAllUserPost(userId, topicId);
+                    }
+                    userByIdWithTopic.setTopics(new ArrayList<>());
+                    userDAO.update(userByIdWithTopic);
+                }
+                userDAO.delete(userId);
                 response.sendRedirect(request.getContextPath()+"/user/users");
-            }
-            else {
-                response.sendRedirect(request.getContextPath()+"/welcome");
             }
         }
 

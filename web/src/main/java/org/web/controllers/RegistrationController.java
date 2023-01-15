@@ -54,7 +54,7 @@ public class RegistrationController {
                 user.setRole(registrationUser.getRole());
                 user.setImage(registrationUser.getImage());
                 userDAO.add(user);
-                emailService.sendEmail("pahaschewzow@gmail.com", user.getEmail(),"Registration","\nUser : " + user.getUserName() + " " + user.getEmail() + " registered in the app" );
+                emailService.sendEmail("pahaschewzow@gmail.com", user.getEmail(),"Registration","Name - "  + user.getUserName() + "; ID - " + user.getId() + "; Email - " + user.getEmail() + " registered in the app" );
 
                 modelAndView = new ModelAndView("login")
                         .addObject("errorPassword","<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
