@@ -14,7 +14,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     private int maxUploadSize = 1024*1024;
 
-    private File uploadDirectory = new File("C:\\Program Files");
+    private File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
