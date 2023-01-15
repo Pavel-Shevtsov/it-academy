@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.web.forms.UserForm;
+import org.web.service.EmailService;
 
 @Controller
 @RequestMapping(value = "/addUser")
@@ -20,7 +21,8 @@ public class RegistrationController {
 
     @Autowired
     UserDAO userDAO;
-
+    @Autowired
+    EmailService emailService;
 
     @GetMapping
     public ModelAndView preRegistration (){
@@ -32,9 +34,7 @@ public class RegistrationController {
 
     @PostMapping
     public ModelAndView postRegistration(@ModelAttribute("registrationForm") UserForm registrationUser, HttpServletRequest request){
-
         User user = new User();
-        HttpSession httpSession = request.getSession(false);
         ModelAndView modelAndView = null;
         UserValidation userValidation = new UserValidation();
         UserForm imageForm = (UserForm) request.getSession().getAttribute("imageForm");
@@ -54,10 +54,7 @@ public class RegistrationController {
                 user.setRole(registrationUser.getRole());
                 user.setImage(registrationUser.getImage());
                 userDAO.add(user);
-                if (httpSession!=null){
-                    httpSession.setAttribute("name",user.getUserName());
-                    httpSession.setAttribute("role", user.getRole());
-                }
+                emailService.sendEmail("pahaschewzow@gmail.com", user.getEmail(),"Registration","\nUser : " + user.getUserName() + " " + user.getEmail() + " registered in the app" );
 
                 modelAndView = new ModelAndView("login")
                         .addObject("errorPassword","<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
@@ -89,7 +86,7 @@ public class RegistrationController {
                             "Please enter them again</p>")
                     .addObject("registrationForm",new UserForm());
         }else {
-            if (userValidation.isHaveUserWithUserEmail(registrationUser.getEmail())){
+            if (userDAO.getUserByEmail(registrationUser.getEmail())!=null){
                 modelAndView = new ModelAndView("register")
                         .addObject("errorEmailRegister","<p style =\"color: red\"> User with this email is already register</p>")
                         .addObject("registrationForm",new UserForm());

@@ -10,10 +10,7 @@ import org.example.model.User;
 import org.example.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.web.forms.UserForm;
 
@@ -29,45 +26,29 @@ public class UserController {
     @Autowired
     UserDAO userDAO;
 
-    @GetMapping(value = {"/users"})
-    public ModelAndView allUsers(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-        String name = (String) session.getAttribute("name");
-        List<User> users = new ArrayList<>();
-        List<User> allUsers ;
-        allUsers = userDAO.allUsers();
-        allUsers.forEach(u ->{
-            if (!u.getUserName().equals(name)){
-                users.add(u);
-            }
-        });
-        return  new ModelAndView("/users").addObject("otherUsers", users);
-    }
-
     @GetMapping(value = {"/update"})
-    public ModelAndView preUpdate(@ModelAttribute("id") int userID) {
-        UserForm updateUserForm = new UserForm(userDAO.getById(userID)) ;
-        return new ModelAndView("/update").addObject("updateUserForm", updateUserForm);
+    public ModelAndView preUpdate(@RequestParam("id") int userId,HttpServletRequest request) {
+        UserForm updateUserForm = new UserForm(userDAO.getById(userId)) ;
+        request.getSession().setAttribute("updatedUserId",userId);
+        return new ModelAndView("update").addObject("updateUserForm", updateUserForm);
     }
 
     @PostMapping(value = {"/update"})
     public ModelAndView postUpdate(@ModelAttribute("updateUserForm") UserForm updateUserForm, HttpServletRequest request) {
-
         UserValidation userValidation = new UserValidation();
-        boolean validationName = false;
-        boolean validationEmail = false;
         HttpSession session = request.getSession(false);
         ModelAndView modelAndView;
-        String role = (String) session.getAttribute("role");
+        User sessionUser = (User) session.getAttribute("user");
 
-        User updatedUser = userDAO.getUserByUserName(updateUserForm.getUsername());
+        User updatedUser = userDAO.getById(updateUserForm.getId());
         UserForm imageForm = (UserForm) request.getSession().getAttribute("imageForm");
 
         if (!updateUserForm.getNewUsername().equals("")) {
-            validationName = userValidation.isHaveUserWithUserName(updateUserForm.getNewUsername());
-            if (validationName) {
-                modelAndView = new ModelAndView("welcome")
-                        .addObject("userNameAlreadyRegistered", "<p style = \"color: red\">A user with this username is already registered</p>");
+
+            if (userDAO.getUserByUserName(updateUserForm.getNewUsername())!= null) {
+                return new ModelAndView("update")
+                        .addObject("userNameAlreadyRegistered", "<p style = \"color: red\">A user with this username is already registered</p>")
+                        .addObject("updateUserForm", updateUserForm);
             } else {
                 updatedUser.setUserName(updateUserForm.getNewUsername());
             }
@@ -81,31 +62,32 @@ public class UserController {
             if (validationPassword) {
                 updatedUser.setPassword(updateUserForm.getNewPassword());
             } else {
-                if (role.equalsIgnoreCase("Admin")) {
-                    modelAndView = new ModelAndView("welcome")
+                if (sessionUser.getRole().equalsIgnoreCase("Admin")) {
+                    return  new ModelAndView("update")
                             .addObject("updatePassword", "<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
-                                    "\n uppercase character and at least one digit </p>");
+                                    "\n uppercase character and at least one digit </p>")
+                            .addObject("updateUserForm", updateUserForm);
                 } else {
-                    modelAndView = new ModelAndView("welcome")
+                    return new ModelAndView("update")
                             .addObject("updateUserPassword", "<p style = \"color: red\"> The password must contain at least 8 characters, at least 1" +
-                                    "\n uppercase character and at least one digit </p>");
+                                    "\n uppercase character and at least one digit </p>")
+                            .addObject("updateUserForm", updateUserForm);
                 }
             }
         }
 
         if (!updateUserForm.getNewEmail().equals("")) {
-            validationEmail = userValidation.isHaveUserWithUserEmail(updateUserForm.getNewEmail());
-            if (validationEmail) {
-                modelAndView = new ModelAndView("welcome")
-                        .addObject("userEmailAlreadyRegistered", "<p style = \"color: red\">A user with this email is already registered</p>");
+            if (userDAO.getUserByEmail(updateUserForm.getNewEmail())!=null) {
+                return new ModelAndView("update")
+                        .addObject("userEmailAlreadyRegistered", "<p style = \"color: red\">A user with this email is already registered</p>")
+                        .addObject("updateUserForm", updateUserForm);
             } else {
                 updatedUser.setEmail(updateUserForm.getNewEmail());
             }
-        } else
-
+        }
             userDAO.update(updatedUser);
 
-        if (updateUserForm.getUsername().equals(session.getAttribute("name"))) {
+        if (updateUserForm.getUsername().equals(session.getAttribute("userName"))) {
             modelAndView = new ModelAndView("login")
                     .addObject("userUpdate", "<p style = \"color: blue\"> User named " + updateUserForm.getUsername() + " " +
                             updateUserForm.getPassword() + " " + updateUserForm.getEmail() +
@@ -124,9 +106,15 @@ public class UserController {
     }
 
     @GetMapping(value = {"/delete"})
-    public void postUserDelete(@ModelAttribute("id") Integer userId,HttpServletRequest request, HttpServletResponse response) throws IOException {
-            userDAO.delete(userId);
-        response.sendRedirect(request.getContextPath()+"/welcome");
+    public void postUserDelete(@ModelAttribute("id") int userId,HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User sessionUser = (User) request.getSession().getAttribute("user");
+        userDAO.delete(userId);
+            if (sessionUser.getRole().equalsIgnoreCase("Admin")){
+                response.sendRedirect(request.getContextPath()+"/user/users");
+            }
+            else {
+                response.sendRedirect(request.getContextPath()+"/welcome");
+            }
         }
 
     @SneakyThrows
@@ -141,13 +129,16 @@ public class UserController {
     @PostMapping(value = {"/uploadPhoto"})
     public ModelAndView uploadPhoto(@ModelAttribute("imageForm") UserForm imageForm, HttpServletRequest request) throws IOException {
 
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
         ModelAndView modelAndView;
-        String userName = (String)request.getSession().getAttribute("name");
         imageForm.setImage(imageForm.getFileData().getBytes());
         request.getSession().setAttribute("imageForm",imageForm);
-        if(userName!=null){
-            UserForm userForm = new UserForm( userDAO.getUserByUserName(userName));
+
+        if(user!=null){
+            UserForm userForm = new UserForm(userDAO.getById((Integer) session.getAttribute("updatedUserId")));
             userForm.setImage(imageForm.getImage());
+            session.removeAttribute("updatedUserId");
             modelAndView = new ModelAndView("update");
             modelAndView.addObject("updateUserForm",userForm);
         }else{
@@ -165,13 +156,14 @@ public class UserController {
             response.setContentType("image/jpg");
             response.getOutputStream().write(imageForm.getImage());
         }
+        request.removeAttribute("imageForm");
         response.getOutputStream().close();
     }
 
     @GetMapping(value = {"/imageOnWelcomePage"})
     public void imageOnWelcomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String userName = (String) request.getSession().getAttribute("name");
-        UserForm userForm = new UserForm(userDAO.getUserByUserName(userName));
+        HttpSession session = request.getSession(false);
+        UserForm userForm = new UserForm((User) session.getAttribute("user"));
         if (userForm.getImage() != null) {
             response.setContentType("img/jpg");
             response.getOutputStream().write(userForm.getImage());

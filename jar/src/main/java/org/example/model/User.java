@@ -46,7 +46,7 @@ public class User implements Serializable {
     )
     private List<Topic> topics;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST} )
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL} )
     @ToString.Exclude
     private List<Post> posts;
 

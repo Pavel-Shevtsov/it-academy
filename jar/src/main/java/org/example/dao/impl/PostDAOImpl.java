@@ -30,4 +30,12 @@ public class PostDAOImpl extends BaseDAO <Post,Integer> implements PostDAO {
         }
         return posts;
     }
+
+    @Override
+    public void deleteAllUserPost(int userId, int topicId) {
+        List<Post> postByUserTopic = getPostByUserTopic(userId, topicId);
+        for (Post post : postByUserTopic) {
+            em.remove(post);
+        }
+    }
 }

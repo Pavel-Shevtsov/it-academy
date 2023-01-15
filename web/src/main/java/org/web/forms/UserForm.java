@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserForm{
-    private long id;
+    private int id;
     private String username;
     private String newUsername;
     private String password;

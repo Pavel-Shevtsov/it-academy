@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.web.forms.UserForm;
-import org.web.service.EmailService;
-import jakarta.activation.spi.MimeTypeRegistryProvider;
 
 import java.io.IOException;
 
@@ -25,8 +23,7 @@ public class LoginController {
 
     @Autowired
     UserDAO userDAO;
-    @Autowired
-    EmailService emailService;
+
 
 
     @GetMapping(value = {"/login"})
@@ -37,31 +34,27 @@ public class LoginController {
     @PostMapping(value = {"/login"})
     public ModelAndView submitLogin(@ModelAttribute("registrationForm") UserForm loginUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        ModelAndView model ;
+        ModelAndView model = null;
         HttpSession session = request.getSession(false);
 
-        User user;
-        user = userDAO.getUserByUserName(loginUser.getUsername());
+        User user = userDAO.getUserByUserName(loginUser.getUsername());
         if (user == null) {
-            model = new ModelAndView("index")
+            return new ModelAndView("login")
                     .addObject("loginError", "<p style =\"color: red\"> Sorry user with this username is not registered </p>");
         }
         if (loginUser.getPassword().equals(user.getPassword())) {
             if (session != null) {
-                session.setAttribute("id", user.getId());
-                session.setAttribute("name", user.getUserName());
-                session.setAttribute("password", user.getPassword());
-                session.setAttribute("role", user.getRole());
-                session.setAttribute("email", user.getEmail());
+                session.setAttribute("user", user);
+                session.setAttribute("userName", user.getUserName());
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("visitCounter",0);
             }
-            emailService.sendEmail("pahaschewzow@gmail.com", user.getEmail(),"Login","User " + user + "Login in App" );
+
             response.sendRedirect(request.getContextPath()+"/welcome");
-
-
-        }
-            model = new ModelAndView("login")
+        }else{
+          model = new ModelAndView("login")
                     .addObject("errorPasswordUsername", "<p style =\"color: red\"> Sorry username or password error</p>");
-
+        }
          return model;
     }
 }

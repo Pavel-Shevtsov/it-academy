@@ -18,53 +18,48 @@
                     <div class="panel">
                         <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                            <div class="dropDownUser">
-                               <button class="dropBtn">${name}</button>
+                               <button class="dropBtn"> ${userName}</button>
                                    <div class="dropDownUser-content" style="right:20;">
                                        <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
-                                       <p><a href = '${pageContext.request.contextPath}/user/update?id=${id}'>Update</a></p>
-                                       <c:if test="${role.equals('Admin')}">
+                                       <p><a href = '${pageContext.request.contextPath}/user/update?id=${userId}'>Update</a></p>
+                                       <c:if test="${user.getRole().equals('Admin')}">
                                        <p><a href ='${pageContext.request.contextPath}/user/users'>All Users</a></p>
                                        <p><a href ='${pageContext.request.contextPath}/topic/create'>Create Topic</a></p>
                                        </c:if>
-                                       <c:if test="${role.equals('User')}">
-                                       <p><a href ='${pageContext.request.contextPath}/topic/add'>Add Topic</a></p>                                       </c:if>
+                                       <c:if test="${user.getRole().equals('User')}">
+                                       <p><a href ='${pageContext.request.contextPath}/topic/allFree'>Add Topic</a></p>                                       </c:if>
                                        <p><a href = '${pageContext.request.contextPath}/user/logout' >Logout</a></p>
                                    </div>
                            </div>
                     </div>
                          <div class= "message">
-                              ${userOtherUpdate}
                               ${userUpdate}
-                              ${updatePassword}
-                              ${updateUserPassword}
-                              ${userEmailAlreadyRegistered}
-                              ${userNameAlreadyRegistered}
                               ${deleteUser}
                               ${deleteTopic}
-                              ${createTopicError}
                               ${createTopicSuccessfully}
                               ${addTopic}
                               ${deletePost}
-                              ${updatePost}
                           </div>
                                  <div class ="welcomeMessage">
-                                      <h1>Welcome ${name}</h1>
-                                      <p><img src="${pageContext.request.contextPath}/user/imageOnWelcomePage" width="100"/></p>
+                                      <p><img src="${pageContext.request.contextPath}/user/imageOnWelcomePage" width="150"/></p>
+                                      <c:if test = "${visitCounter<1}">
+                                      <h1>Welcome ${userName}</h1>
+                                      </c:if>
                                  </div>
                 <table>
-                    <c:if test="${role.equals('Admin')}">
+                    <c:if test="${user.role.equals('Admin')}">
                         <thead>
                             <th >All topics</th>
                         </thead>
                             <tbody>
                                 <c:forEach var="topic" items="${allTopics}">
                                     <tr>
-                                        <td><c:out value ="${topic.name}"/></td>
+                                        <td><c:out value ="${topic.getName()}"/></td>
                                     </tr>
                             </tbody>
                                 </c:forEach>
                     </c:if>
-                                <c:if test="${role.equals('User')}">
+                                <c:if test="${user.role.equals('User')}">
                                       <form action="${pageContext.request.contextPath}/welcome" method = "get" >
                                           <thead>
                                               <th >All topics</th>
@@ -75,7 +70,7 @@
                                                       <tr>
                                                           <td><c:out value ="${topic.name}"/></td>
                                                           <td><p><a class="action" href ="${pageContext.request.contextPath}/topic/delete?id=${topic.id}">Delete</a></p>
-                                                          <p><a class="action" href ="${pageContext.request.contextPath}/post/posts?idTopic=${topic.id}">Go to</a></p></td>
+                                                          <p><a class="action" href ="${pageContext.request.contextPath}/post/posts?id=${topic.id}">Go to</a></p></td>
                                                       </tr>
                                               </tbody>
                                                   </c:forEach>

@@ -24,7 +24,7 @@
                                 <form action="${pageContext.request.contextPath}/user/uploadPhoto" enctype="multipart/form-data" method="post">
                                       <p>Choose your photo</p>
                                       <tr>
-                                      <img src="${pageContext.request.contextPath}/user/viewImage" width="100"
+                                      <img src="${pageContext.request.contextPath}/user/viewImage" width="130"
                                       </tr>
                                       <p><input type="file" name="fileData" ></p>
                                       <input type="submit" value="Download"></p>

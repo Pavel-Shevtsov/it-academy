@@ -8,6 +8,12 @@
     <title>Update </title>
     </head>
             <body>
+             <div class= "message">
+                ${userEmailAlreadyRegistered}
+                ${userNameAlreadyRegistered}
+                ${updatePassword}
+                ${updateUserPassword}
+             </div>
                     <div class= "updatePage">
                         <div class = "legendUpdatePage">
                             <h1>Changing user data <h1>
@@ -23,12 +29,12 @@
                             </form>
                                     <form action="${pageContext.request.contextPath}/user/update" method = "post" >
                                         <div class="text-field">
+                                            <p>ID</p>
+                                            <input class="text-readonly"type = "text" name = "id" value ="${updateUserForm.id}"readonly>
                                             <p>Old Name</p>
                                             <input class="text-readonly" type = "text" name="username" value="${updateUserForm.username}" readonly>
                                             <p>New Name</p>
                                             <input type="text" name = "newUsername" >
-                                            <p>Old Password</p>
-                                            <input class="text-readonly" type = "text" name="password" value="${updateUserForm.password}" readonly>
                                             <p>New Password</p>
                                             <input type="password" name = "newPassword" >
                                             <p> Old email </p>

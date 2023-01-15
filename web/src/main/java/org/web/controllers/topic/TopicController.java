@@ -12,10 +12,7 @@ import org.example.model.Topic;
 import org.example.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.web.forms.TopicForm;
 
@@ -36,7 +33,7 @@ public class TopicController {
     @Autowired
     PostDAO postDAO;
 
-    @GetMapping(value = {"create"})
+    @GetMapping(value = {"/create"})
     public ModelAndView preCreate(){
         return new ModelAndView("createTopic").addObject("topicForm", new TopicForm());
     }
@@ -50,17 +47,17 @@ public class TopicController {
             topicDAO.add(topic);
             response.sendRedirect(request.getContextPath() + "/welcome");
         }
-            modelAndView = new ModelAndView("welcome")
-                    .addObject("createTopicError", "<p style =\"color: red\"> Sorry, there is a topic with this topic name</p>");
+            modelAndView = new ModelAndView("createTopic")
+                    .addObject("createTopicError", "<p style =\"color: red\"> Sorry, there is a topic with this topic name</p>")
+                    .addObject("topicForm", createTopicForm);
         return modelAndView;
     }
-    @GetMapping(value = {"/add"})
+    @GetMapping(value = {"/allFree"})
     public ModelAndView preAddTopic(HttpServletRequest request){
         ModelAndView modelAndView;
         HttpSession session = request.getSession(false);
-        int userId = (int) session.getAttribute("id");
-
-        User userByIdWithTopic = userDAO.getUserByIdWithTopic(userId);
+        User sessionUser = (User) session.getAttribute("user");
+        User userByIdWithTopic = userDAO.getUserByIdWithTopic(sessionUser.getId());
         List<Topic> allTopicsUser = userByIdWithTopic.getTopics();
         List<Topic> allTopics = topicDAO.allTopic();
         if (allTopicsUser.size()!=0) {
@@ -77,13 +74,13 @@ public class TopicController {
 
         return new ModelAndView("addTopic").addObject("freeTopics", freeTopics);
     }
-    @PostMapping(value = {"/add"})
-    public ModelAndView addTopic(@ModelAttribute("id") int topicId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @GetMapping(value = {"/add"})
+    public ModelAndView addTopic(@RequestParam("id") int topicId, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        ModelAndView modelAndView;
+        ModelAndView modelAndView = null;
         HttpSession session = request.getSession(false);
-        int userId = (int) session.getAttribute("id");
-        User userByUserName = userDAO.getUserByIdWithTopic(userId);
+        User sessionUser = (User) session.getAttribute("user");
+        User userByUserName = userDAO.getUserByIdWithTopic(sessionUser.getId());
         Topic topicById = topicDAO.getById(topicId);
 
         List<Topic> topics = userByUserName.getTopics();
@@ -94,39 +91,36 @@ public class TopicController {
 
         topicById.setUsers(Collections.singletonList(userByUserName));
         if (sizeUpTo!=sizeAfter){
-            modelAndView = new ModelAndView("welcome")
-                    .addObject("addTopic","<p style = \"color: blue\"> Topic add successful.</p>");
+            userDAO.update(userByUserName);
+            response.sendRedirect(request.getContextPath()+ "/welcome");
         }else {
-            modelAndView = new ModelAndView("welcome")
+            modelAndView = new ModelAndView("addTopic")
                     .addObject("addTopic","<p style = \"color: red\"> Topic not added.</p>");
         }
-        userDAO.update(userByUserName);
         return modelAndView;
     }
 
     @GetMapping(value = {"/delete"})
-    public ModelAndView deleteTopic(@ModelAttribute("id") int topicId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void deleteTopic(@ModelAttribute("id") int topicId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
-        int userId = (int) session.getAttribute("id");
+        User sessionUser = (User) session.getAttribute("user");
         if (topicId!=0) {
             Topic topicById = topicDAO.getById(topicId);
-            User userById = userDAO.getUserByIdWithTopic(userId);
-            List<Post> postByUserTopic = postDAO.getPostByUserTopic(userId, topicId);
+            User userById = userDAO.getUserByIdWithTopic(sessionUser.getId());
+
             int indexTopicInList = -1;
             List<Topic> userTopics = userById.getTopics();
             for (Topic topic : userTopics) {
                 if (topic.getName().equals(topicById.getName())) {
                     indexTopicInList = userTopics.indexOf(topic);
-                    if (postByUserTopic.size()!=0) {
-                        postByUserTopic.removeAll(postByUserTopic);
-                    }
+                   postDAO.deleteAllUserPost(sessionUser.getId(),topicId);
                 }
             }
+            topicDAO.update(topicById);
             userTopics.remove(indexTopicInList);
             userDAO.update(userById);
         }
-        return new ModelAndView("welcome")
-                .addObject("deleteTopic","<p style = \"color: blue\"> Topic deleted successfully.</p>");
+        response.sendRedirect(request.getContextPath() + "/welcome");
     }
 
 }

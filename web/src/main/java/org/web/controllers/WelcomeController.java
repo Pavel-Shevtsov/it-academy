@@ -27,16 +27,23 @@ public class WelcomeController {
     public ModelAndView welcomePage(HttpServletRequest request){
         ModelAndView modelAndView;
         HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute("role");
-        if (role.equalsIgnoreCase("Admin")){
+        User user = (User) session.getAttribute("user");
+        int visitCounter = (int) session.getAttribute("visitCounter");
+        if (user.getRole().equalsIgnoreCase("Admin")){
             List<Topic> allTopicsList = topicDAO.allTopic();
-            modelAndView = new ModelAndView("welcome").addObject("allTopics", allTopicsList);
+            modelAndView = new ModelAndView("welcome").addObject("allTopics", allTopicsList)
+                    .addObject("user",user)
+                    .addObject("visitCounter", visitCounter);
         }else{
-            User user = userDAO.getUserByUserName((String) session.getAttribute("name"));
             User userTopicsList = userDAO.getUserByIdWithTopic(user.getId());
             List<Topic> topics = userTopicsList.getTopics();
             modelAndView = new ModelAndView("welcome")
-                    .addObject("userTopics", topics);
+                    .addObject("userTopics", topics)
+                    .addObject("user",user)
+                    .addObject("visitCounter", visitCounter);
+        }
+        if (visitCounter<1){
+            session.setAttribute("visitCounter", visitCounter + 1);
         }
         return modelAndView;
     }

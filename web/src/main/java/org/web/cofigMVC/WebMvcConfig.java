@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.web.interceptor.TopicInterceptor;
 import org.web.interceptor.UserInterceptor;
 
 @Configuration
@@ -41,6 +42,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(new UserInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/addUser","/login","/user/logout","/user/uploadPhoto","/user/viewImage");
+        registry.addInterceptor(new TopicInterceptor()).addPathPatterns("/topic/create");
     }
 
 }

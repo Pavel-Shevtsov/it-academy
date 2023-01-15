@@ -20,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan(basePackages = {"org.example.dao","org.web"})
+@ComponentScan(basePackages = {"org.example.dao","org.example.validation","org.web"})
 @EnableTransactionManagement
 public class AppContext {
 
@@ -67,7 +67,7 @@ public class AppContext {
 
         return jpaTransactionManager;
     }
-    @Bean
+   /* @Bean
     public JavaMailSenderImpl getJavaMailSenderImpl(){
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setPort(587);
@@ -87,5 +87,5 @@ public class AppContext {
         properties.put("mail.debug","true");
         properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
         return properties;
-    }
+    }*/
 }

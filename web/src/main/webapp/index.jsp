@@ -5,7 +5,7 @@
     <head>
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
 
-    <title>Login to application</title>
+    <title>Start page</title>
     <head>
     </head>
     <body>
