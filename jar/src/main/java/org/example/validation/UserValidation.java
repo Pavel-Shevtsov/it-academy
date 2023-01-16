@@ -2,8 +2,10 @@ package org.example.validation;
 
 import org.example.dao.impl.UserDAOImpl;
 import org.example.model.User;
-import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+@Service
 public class  UserValidation {
     UserDAOImpl userDAO = new UserDAOImpl();
 
@@ -16,10 +18,5 @@ public class  UserValidation {
        Optional<User> user;
        user = Optional.ofNullable(userDAO.getUserByUserName(userName));
        return  user.isPresent();
-   }
-
-  public boolean isHaveUserWithUserEmail(String email){
-      Optional<User> user = Optional.ofNullable(userDAO.getUserByEmail(email));
-      return  user.isPresent();
    }
 }

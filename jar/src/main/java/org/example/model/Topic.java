@@ -28,10 +28,10 @@ public class Topic implements Serializable {
     protected int id;
     @Column(unique = true,nullable = false,length = 30)
     private String name;
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic", cascade = {CascadeType.PERSIST})
     @ToString.Exclude
     private List<Post> post;
-    @ManyToMany(mappedBy = "topics")
+    @ManyToMany(mappedBy = "topics", cascade = {CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> users;
 

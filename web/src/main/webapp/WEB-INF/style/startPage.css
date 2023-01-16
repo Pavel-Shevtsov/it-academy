@@ -1,0 +1,12 @@
+button{
+    margin-left:175px;
+    width:30%;
+    height:40px;
+    background-color:#D2B48C;
+    border-radius: 8px;
+    border:none;
+    vertical-align: middle
+}
+button:hover {
+	background-color: #b8b2ad;
+}

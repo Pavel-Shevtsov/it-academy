@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface PostDAO extends DAO<Post, Integer> {
     List <Post> getPostByUserTopic(int userId, int topicId);
+    void deleteAllUserPost(int userId, int topicId);
 }

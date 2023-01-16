@@ -1,6 +1,6 @@
 package org.exemple.dao.impl;
 
-import org.example.config.AppContext;
+import org.example.config.TestAppContext;
 import org.example.dao.inter.PostDAO;
 import org.example.model.Post;
 import org.junit.jupiter.api.*;
@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = AppContext.class)
+@ContextConfiguration(classes = TestAppContext.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PostDAOTest {
 

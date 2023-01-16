@@ -34,7 +34,7 @@ public class User implements Serializable {
     private String password;
     @Column(unique = true,nullable = false,length = 40)
     private String email;
-    @Column(nullable = false,length = 6, columnDefinition = "User")
+    @Column(nullable = false,length = 6)
     private String role;
 
     @ManyToMany(targetEntity = Topic.class,cascade = {CascadeType.ALL})
@@ -46,9 +46,13 @@ public class User implements Serializable {
     )
     private List<Topic> topics;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST} )
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL} )
     @ToString.Exclude
     private List<Post> posts;
+
+    @Lob
+    @Column(name = "image",columnDefinition="mediumblob")
+    private byte[] image;
 
     @Override
     public boolean equals(Object o) {

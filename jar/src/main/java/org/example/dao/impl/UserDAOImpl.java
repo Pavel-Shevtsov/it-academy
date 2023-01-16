@@ -1,4 +1,5 @@
 package org.example.dao.impl;
+
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;

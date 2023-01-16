@@ -6,14 +6,11 @@ import jakarta.transaction.Transactional;
 import org.example.dao.inter.PostDAO;
 import org.example.model.Post;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 
 @Repository
 @Transactional
-public class PostDAOImpl extends BaseDAO<Post,Integer> implements PostDAO {
-
+public class PostDAOImpl extends BaseDAO <Post,Integer> implements PostDAO {
 
     public PostDAOImpl() {
         super();
@@ -32,5 +29,13 @@ public class PostDAOImpl extends BaseDAO<Post,Integer> implements PostDAO {
             return null;
         }
         return posts;
+    }
+
+    @Override
+    public void deleteAllUserPost(int userId, int topicId) {
+        List<Post> postByUserTopic = getPostByUserTopic(userId, topicId);
+        for (Post post : postByUserTopic) {
+            em.remove(post);
+        }
     }
 }
