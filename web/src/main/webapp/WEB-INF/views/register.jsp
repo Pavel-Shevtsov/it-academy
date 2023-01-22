@@ -1,13 +1,12 @@
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language = "Java" contentType = "text/html charset = ISO-8859-1" pageEncoding = "ISO-8859-1" %>
-
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
     <html>
     <head>
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
     <style><%@include file="/WEB-INF/style/styleBody.css"%></style>
     <style><%@include file="/WEB-INF/style/styleRegistrationPage.css"%></style>
     <title>Account registration</title>
-
     </head>
             <body>
                 <div class = "errors">
@@ -29,10 +28,6 @@
                                       <p><input type="file" name="fileData" ></p>
                                       <input type="submit" value="Download"></p>
                                  </form>
-
-
-
-
                                    <form action="${pageContext.request.contextPath}/addUser" method = "post" >
                                         <div class="text-field">
                                                  <p>UserName</p>
@@ -45,11 +40,7 @@
                                                  <p><input type="email" name = "email" required = "required"><p>
                                         </div>
                                                   <input type = "submit", value = "Registration">
-
-
                                         </form>
-
-
                                </div>
                             <button onclick = "location.href = '${pageContext.request.contextPath}' " >Back</button>
                    </div>

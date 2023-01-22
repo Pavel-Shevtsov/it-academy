@@ -2,10 +2,10 @@ package org.web.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.example.dao.inter.TopicDAO;
-import org.example.dao.inter.UserDAO;
 import org.example.model.Topic;
 import org.example.model.User;
+import org.example.repository.TopicJpaRepository;
+import org.example.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +19,9 @@ import java.util.List;
 public class WelcomeController {
 
     @Autowired
-    TopicDAO topicDAO;
+    TopicJpaRepository topicJpaRepository;
     @Autowired
-    UserDAO userDAO;
-
+    UserJpaRepository userJpaRepository;
     @GetMapping
     public ModelAndView welcomePage(HttpServletRequest request){
         ModelAndView modelAndView;
@@ -30,12 +29,12 @@ public class WelcomeController {
         User user = (User) session.getAttribute("user");
         int visitCounter = (int) session.getAttribute("visitCounter");
         if (user.getRole().equalsIgnoreCase("Admin")){
-            List<Topic> allTopicsList = topicDAO.allTopic();
+            List<Topic> allTopicsList = topicJpaRepository.findAll();
             modelAndView = new ModelAndView("welcome").addObject("allTopics", allTopicsList)
                     .addObject("user",user)
                     .addObject("visitCounter", visitCounter);
         }else{
-            User userTopicsList = userDAO.getUserByIdWithTopic(user.getId());
+            User userTopicsList = userJpaRepository.findById(user.getId());
             List<Topic> topics = userTopicsList.getTopics();
             modelAndView = new ModelAndView("welcome")
                     .addObject("userTopics", topics)

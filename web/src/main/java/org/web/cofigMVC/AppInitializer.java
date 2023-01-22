@@ -41,15 +41,4 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
                 maxUploadSize,maxUploadSize*2,maxUploadSize/2);
         return multipartConfigElement;
     }
-
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-
-        super.onStartup(servletContext);
-        DelegatingFilterProxy userFilter = new DelegatingFilterProxy();
-        userFilter.setTargetBeanName("");
-
-        servletContext.addFilter("UserFilter", userFilter.getClass())
-                .addMappingForUrlPatterns(null, false,"/user/users");
-    }
 }

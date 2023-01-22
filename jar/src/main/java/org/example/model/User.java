@@ -15,13 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-@NamedQueries({
-        @NamedQuery(name = "User.getAll", query = "SELECT u from User u"),
-        @NamedQuery(name = "User.getUserByUserName", query = "SELECT u from User u where u.userName = :userName"),
-        @NamedQuery(name = "User.getUserByPassword", query = "SELECT u from User u where u.password = :password"),
-        @NamedQuery(name = "User.getUserByEmail", query = "SELECT u from User u where u.email = :email"),
-        @NamedQuery(name = "User.getUserByIdWithTopic", query = "SELECT u from User u left join fetch u.topics where u.id = :userId")
-})
+
 
 public class User implements Serializable {
 

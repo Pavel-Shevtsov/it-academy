@@ -4,12 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.SneakyThrows;
-import org.example.dao.inter.PostDAO;
-import org.example.dao.inter.TopicDAO;
-import org.example.dao.inter.UserDAO;
+import org.example.model.Post;
 import org.example.model.Topic;
 import org.example.model.User;
 
+import org.example.repository.*;
+import org.example.repository.UserJpaRepository;
 import org.example.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,16 +26,19 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserController {
 
+
     @Autowired
-    UserDAO userDAO;
+    UserJpaRepository userJpaRepository;
+
     @Autowired
-    TopicDAO topicDAO;
+    TopicJpaRepository topicJpaRepository;
+
     @Autowired
-    PostDAO postDAO;
+    PostJpaRepository postJpaRepository;
 
     @GetMapping(value = {"/update"})
     public ModelAndView preUpdate(@RequestParam("id") int userId,HttpServletRequest request) {
-        UserForm updateUserForm = new UserForm(userDAO.getById(userId)) ;
+        UserForm updateUserForm = new UserForm(userJpaRepository.findById(userId)) ;
         request.getSession().setAttribute("updatedUserId",userId);
         return new ModelAndView("update").addObject("updateUserForm", updateUserForm);
     }
@@ -44,17 +47,16 @@ public class UserController {
     @PostMapping(value = {"/update"})
     public ModelAndView postUpdate(@ModelAttribute("updateUserForm") UserForm updateUserForm, HttpServletRequest request, HttpServletResponse response) {
 
-        UserValidation userValidation = null;
+        UserValidation userValidation = new UserValidation();
         HttpSession session = request.getSession(false);
         ModelAndView modelAndView = null;
         User sessionUser = (User) session.getAttribute("user");
 
-        User updatedUser = userDAO.getById(updateUserForm.getId());
+        User updatedUser = userJpaRepository.findById(updateUserForm.getId());
         UserForm imageForm = (UserForm) request.getSession().getAttribute("imageForm");
 
         if (!updateUserForm.getNewUsername().equals("")) {
-
-            if (userDAO.getUserByUserName(updateUserForm.getNewUsername())!= null) {
+            if (userJpaRepository.findByUserName(updateUserForm.getNewUsername())!= null) {
                 return new ModelAndView("update")
                         .addObject("userNameAlreadyRegistered", "<p style = \"color: red\">A user with this username is already registered</p>")
                         .addObject("updateUserForm", updateUserForm);
@@ -67,8 +69,7 @@ public class UserController {
         }
 
         if (!updateUserForm.getNewPassword().equals("")) {
-            boolean validationPassword = userValidation.isPasswordValidate(updateUserForm.getNewPassword());
-            if (validationPassword) {
+            if (userValidation.isPasswordValidate(updateUserForm.getNewPassword())) {
                 updatedUser.setPassword(updateUserForm.getNewPassword());
             } else {
                 if (sessionUser.getRole().equalsIgnoreCase("Admin")) {
@@ -86,7 +87,7 @@ public class UserController {
         }
 
         if (!updateUserForm.getNewEmail().equals("")) {
-            if (userDAO.getUserByEmail(updateUserForm.getNewEmail())!=null) {
+            if (userJpaRepository.findByEmail(updateUserForm.getNewEmail())!=null) {
                 return new ModelAndView("update")
                         .addObject("userEmailAlreadyRegistered", "<p style = \"color: red\">A user with this email is already registered</p>")
                         .addObject("updateUserForm", updateUserForm);
@@ -94,7 +95,7 @@ public class UserController {
                 updatedUser.setEmail(updateUserForm.getNewEmail());
             }
         }
-            userDAO.update(updatedUser);
+            userJpaRepository.save(updatedUser);
 
         if (updateUserForm.getUsername().equals(session.getAttribute("userName"))) {
             modelAndView = new ModelAndView("login")
@@ -113,17 +114,20 @@ public class UserController {
     public void postUserDelete(@ModelAttribute("id") int userId,HttpServletRequest request, HttpServletResponse response) throws IOException {
         User sessionUser = (User) request.getSession().getAttribute("user");
             if (sessionUser.getRole().equalsIgnoreCase("Admin")){
-                User userByIdWithTopic = userDAO.getUserByIdWithTopic(userId);
+                User userByIdWithTopic = userJpaRepository.getUserByIdWithTopic(userId);
                 List<Topic> topics = userByIdWithTopic.getTopics();
                 if (topics.size()!=0) {
                     for (int i = 0; i < topics.size(); i++) {
                         int topicId = topics.get(i).getId();
-                        postDAO.deleteAllUserPost(userId, topicId);
+                        List<Post> postByUserTopic = postJpaRepository.findPostByUserTopic(userId, topicId);
+                        for (Post post : postByUserTopic) {
+                            postJpaRepository.delete(post);
+                        }
                     }
                     userByIdWithTopic.setTopics(new ArrayList<>());
-                    userDAO.update(userByIdWithTopic);
+                    userJpaRepository.save(userByIdWithTopic);
                 }
-                userDAO.delete(userId);
+                userJpaRepository.delete(userByIdWithTopic);
                 response.sendRedirect(request.getContextPath()+"/user/users");
             }
         }
@@ -147,7 +151,7 @@ public class UserController {
         request.getSession().setAttribute("imageForm",imageForm);
 
         if(user!=null){
-            UserForm userForm = new UserForm(userDAO.getById((Integer) session.getAttribute("updatedUserId")));
+            UserForm userForm = new UserForm(userJpaRepository.findById((int) session.getAttribute("updatedUserId")));
             userForm.setImage(imageForm.getImage());
             session.removeAttribute("updatedUserId");
             modelAndView = new ModelAndView("update");
@@ -171,7 +175,7 @@ public class UserController {
         response.getOutputStream().close();
     }
 
-    @GetMapping(value = {"/imageOnWelcomePage"})
+    @GetMapping(value = {"/imageOnPage"})
     public void imageOnWelcomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
         UserForm userForm = new UserForm((User) session.getAttribute("user"));

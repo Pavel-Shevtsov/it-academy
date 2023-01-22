@@ -1,8 +1,8 @@
-package org.exemple.dao.impl;
+package org.exemple.repository;
 
 import org.example.config.TestAppContext;
-import org.example.dao.inter.PostDAO;
 import org.example.model.Post;
+import org.example.repository.PostJpaRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,40 +12,43 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestAppContext.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PostDAOTest {
+public class PostJpaRepositoryTest {
 
     @Autowired
-    PostDAO postDAO;
+    PostJpaRepository postJpaRepository;
 
     public static final String TEST_POST_NAME="PostNameTest";
     public static final String TEST_POST_NEW_NAME = "PostNewName";
     public static final String TEST_POST_TEXT="PostTextTest";
     public static final String TEST_POST_NEW_TEXT="PostNewText";
+    public static Integer TEST_POST_ID = null;
 
     @BeforeAll
     public void setUpPost(){
         Post post = new Post();
         post.setText(TEST_POST_TEXT);
         post.setName(TEST_POST_NAME);
-        postDAO.add(post);
+        postJpaRepository.save(post);
     }
 
     @Test
-    public void addPostTest(){
-        Assertions.assertEquals(postDAO.getById(13).getName(),TEST_POST_NAME);
+    public void findPostByNameTest(){
+        Post postByName = postJpaRepository.findPostByName(TEST_POST_NAME);
+        Assertions.assertNull(postByName);
+        TEST_POST_ID = postByName.getId();
     }
 
     @Test
     public void updatePostTest(){
-        Post post = postDAO.getById(13);
+        Post post = postJpaRepository.findPostById(TEST_POST_ID);
         post.setName(TEST_POST_NEW_NAME);
         post.setText(TEST_POST_NEW_TEXT);
-        postDAO.update(post);
-        Assertions.assertEquals(postDAO.getById(13).getName(),TEST_POST_NEW_NAME);
+        postJpaRepository.save(post);
+        Assertions.assertEquals(postJpaRepository.findPostById(TEST_POST_ID).getName(),TEST_POST_NEW_NAME);
     }
     @AfterAll
     public void deletePostTest(){
-        postDAO.delete(13);
-        Assertions.assertNull(postDAO.getById(13));
+        postJpaRepository.delete(postJpaRepository.findPostById(TEST_POST_ID));
+        Assertions.assertNull(postJpaRepository.findPostById(TEST_POST_ID));
     }
 }

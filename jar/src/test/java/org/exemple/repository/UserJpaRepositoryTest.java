@@ -1,4 +1,4 @@
-package org.exemple.dao.impl;
+package org.exemple.repository;
 
 import org.example.config.TestAppContext;
 import org.example.model.Topic;
@@ -16,7 +16,7 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestAppContext.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserDAOTest {
+public class UserJpaRepositoryTest {
     @Autowired
     UserJpaRepository userJpaRepository;
 
@@ -50,10 +50,10 @@ public class UserDAOTest {
         Assertions.assertEquals(userJpaRepository.findByUserName(TEST_USER_NAME).getUserName(),TEST_USER_NAME);
     }
 
-    /*@Test
+    @Test
     public void getByIDTest(){
         Assertions.assertEquals(userJpaRepository.findById(id),"TestUser");
-    }*/
+    }
     @Test
     public void updateTopicTest(){
         User userByUserName = userJpaRepository.findByUserName(TEST_USER_NAME);
@@ -72,26 +72,21 @@ public class UserDAOTest {
     public void getUserWhitTopic(){
        Assertions.assertEquals( userJpaRepository.getUserByIdWithTopic(id).getTopics().size(),1);
     }
-    /*@Test
+    @Test
     public void getAllUserTest(){
-        Assertions.assertNotNull(userDAO.allUsers());
+        Assertions.assertNotNull(userJpaRepository.findAll());
     }
 
     @Test
     public void getUserWithTopicTest(){
-        User user = userDAO.getUserByIdWithTopic(id);
+        User user = userJpaRepository.getUserByIdWithTopic(id);
         Assertions.assertNotNull(user.getTopics());
     }
 
     @Test
-    public void getUserByPasswordTest(){
-        Assertions.assertEquals(userDAO.getUserByUserPassword(TEST_USER_PASSWORD).getPassword(),TEST_USER_PASSWORD);
-    }
-
-    @Test
     public void getUserByEmailTest(){
-        Assertions.assertEquals( userDAO.getUserByEmail(TEST_USER_EMAIL).getEmail(),TEST_USER_EMAIL);
-    }*/
+        Assertions.assertEquals( userJpaRepository.findByEmail(TEST_USER_EMAIL).getEmail(),TEST_USER_EMAIL);
+    }
 
  }
 
