@@ -16,7 +16,7 @@ import org.web.forms.UserForm;
 //import org.web.service.EmailService;
 
 @Controller
-@RequestMapping(value = "/addUser")
+@RequestMapping(value = "/add")
 public class RegistrationController {
 
    /* @Autowired
@@ -51,6 +51,7 @@ public class RegistrationController {
                         if (imageForm!=null){
                             user.setImage(imageForm.getImage());
                         }
+                        user.setRole("User");
                         userJpaRepository.save(user);
                         //emailService.sendEmail("pahaschewzow@gmail.com", user.getEmail(),"Registration","Name - "  + user.getUserName() + "; ID - " + user.getId() + "; Email - " + user.getEmail() + " registered in the app" );
 

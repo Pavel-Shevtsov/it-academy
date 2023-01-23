@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.web.forms.UserForm;
 
@@ -22,6 +24,7 @@ public class MyDBAuthenticationService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
         UserForm account = new UserForm(userJpaRepository.findByUserName(username)) ;
         if(account.getUsername()==null){
             throw new UsernameNotFoundException("User: "+ username + " is null");
@@ -37,7 +40,7 @@ public class MyDBAuthenticationService implements UserDetailsService {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        UserDetails userDetails = (UserDetails) new User(account.getUsername(), account.getPassword(), enabled,
+        UserDetails userDetails = (UserDetails) new User(account.getUsername(),encoder.encode(account.getPassword()), enabled,
                 accountNonExpired,credentialsNonExpired,accountNonLocked,grantList);
 
         return userDetails;
