@@ -85,7 +85,7 @@ public class PostController {
         User sessionUser = (User) session.getAttribute("user");
         session.setAttribute("topicId", idTopic);
         Topic topicById = topicJpaRepository.findById(idTopic);
-        List<Post> userPost = postJpaRepository.findPostByUserTopic(sessionUser.getId(),idTopic);
+        List<Post> userPost = postJpaRepository.findPostByUserTopic(idTopic,sessionUser.getId());
         return new ModelAndView("myPost")
                 .addObject("topicName", topicById.getName())
                 .addObject("posts",userPost)

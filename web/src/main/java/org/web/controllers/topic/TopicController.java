@@ -111,7 +111,7 @@ public class TopicController {
             for (Topic topic : userTopics) {
                 if (topic.getName().equals(topicById.getName())) {
                     indexTopicInList = userTopics.indexOf(topic);
-                    List<Post> postByUserTopic = postJpaRepository.findPostByUserTopic(sessionUser.getId(), topicId);
+                    List<Post> postByUserTopic = postJpaRepository.findPostByUserTopic(topicId,sessionUser.getId());
                     for (Post post : postByUserTopic) {
                         postJpaRepository.delete(post);
                     }

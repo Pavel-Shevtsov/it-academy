@@ -5,6 +5,7 @@
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
     <style><%@include file="/WEB-INF/style/styleBody.css"%></style>
     <style><%@include file="/WEB-INF/style/styleUpdatePage.css"%></style>
+    <style><%@include file="/WEB-INF/style/viewsPhotoOnUpdateAndRegistrationPage.css"%></style>
     <title>Update </title>
     </head>
             <body>
@@ -20,10 +21,10 @@
 
                         </div>
                             <div class= "updateText">
-                            <form action="uploadPhoto" enctype="multipart/form-data" method="post">
+                            <form action="${pageContext.request.contextPath}/add/uploadPhoto" enctype="multipart/form-data" method="post">
 
                                   <p>Choose your photo</p>
-                                  <td><img src="${pageContext.request.contextPath}/user/viewImage" width="100"</td>
+                                  <img src="${pageContext.request.contextPath}/add/viewImage" class ="viewsOnUpdateAndRegistrationPages"/>
                                   <p><input type="file" name="fileData" >
                                   <input type="submit" value="Download"></p>
                             </form>

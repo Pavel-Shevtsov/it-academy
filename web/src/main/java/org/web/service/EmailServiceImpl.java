@@ -5,7 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-/*@Service
+@Service
 public class EmailServiceImpl implements EmailService  {
     @Autowired
     private JavaMailSender javaMailSender;
@@ -19,4 +19,4 @@ public class EmailServiceImpl implements EmailService  {
         message.setSubject(subject);
         javaMailSender.send(message);
     }
-}*/
+}

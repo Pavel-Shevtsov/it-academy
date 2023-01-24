@@ -18,7 +18,7 @@ x<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
                         <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                         <a class="addPost" href = "${pageContext.request.contextPath}/post/addPost?idTopic=${topicId}">Add Post</a>
                            <div class="dropDownUser">
-                               <button class="dropBtn"><img src="${pageContext.request.contextPath}/user/imageOnPage"  class = "photoViews"/> ${userName}</button>
+                               <button class="dropBtn"><img src="${pageContext.request.contextPath}/add/imageOnPage"  class = "photoViews"/> ${userName}</button>
                                    <div class="dropDownUser-content" style="right:20;">
                                        <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
                                        <p><a href = '${pageContext.request.contextPath}/user/update?id=${userId}'>Update</a></p>

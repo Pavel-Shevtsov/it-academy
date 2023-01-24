@@ -34,7 +34,7 @@ public class WelcomeController {
                     .addObject("user",user)
                     .addObject("visitCounter", visitCounter);
         }else{
-            User userTopicsList = userJpaRepository.findById(user.getId());
+            User userTopicsList = userJpaRepository.getUserByIdWithTopic(user.getId());
             List<Topic> topics = userTopicsList.getTopics();
             modelAndView = new ModelAndView("welcome")
                     .addObject("userTopics", topics)

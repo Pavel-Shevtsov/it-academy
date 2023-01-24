@@ -19,7 +19,7 @@
                     <div class="panel">
                         <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                            <div class="dropDownUser">
-                               <button class="dropBtn"> <img src="${pageContext.request.contextPath}/user/imageOnPage"  class = "photoViews"/> ${userName}</button>
+                               <button class="dropBtn"> <img src="${pageContext.request.contextPath}/add/imageOnPage"  class = "photoViews"/> ${userName}</button>
                                    <div class="dropDownUser-content" style="right:20;">
                                        <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
                                        <p><a href = '${pageContext.request.contextPath}/user/update?id=${userId}'>Update</a></p>
@@ -45,7 +45,7 @@
                           </div>
                                  <div class ="welcomeMessage">
                                       <c:if test = "${visitCounter<1}">
-                                       <p><img src="${pageContext.request.contextPath}/user/imageOnPage" width="200"/></p>
+                                       <p><img src="${pageContext.request.contextPath}/add/imageOnPage" width="200"/></p>
                                       <h1>Welcome ${userName}</h1>
                                       </c:if>
                                  </div>

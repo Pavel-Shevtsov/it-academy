@@ -35,7 +35,7 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/user/allUsers").hasAnyRole("Admin")
+                        .requestMatchers("/user/users","/topic/create").hasAnyRole("Admin")
                         .requestMatchers("/user/**","/topic/**","/post/**","/welcome").authenticated()
                         .anyRequest().permitAll()
                 )

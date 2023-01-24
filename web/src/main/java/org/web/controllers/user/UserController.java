@@ -1,5 +1,6 @@
 package org.web.controllers.user;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -98,16 +99,26 @@ public class UserController {
             userJpaRepository.save(updatedUser);
 
         if (updateUserForm.getUsername().equals(session.getAttribute("userName"))) {
-            modelAndView = new ModelAndView("login")
-                    .addObject("userUpdate", "<p style = \"color: blue\"> User named " + updateUserForm.getUsername() + " " +
-                            updateUserForm.getPassword() + " " + updateUserForm.getEmail() +
-                            " updated to " + updateUserForm.getNewUsername() + " " +
-                            updateUserForm.getNewPassword() + " " +
-                            updateUserForm.getNewEmail() + " . Please login the app again</p>");
+            response.sendRedirect(request.getContextPath());
         } else {
             response.sendRedirect(request.getContextPath()+ "/user/users");
         }
         return modelAndView;
+    }
+
+    @GetMapping(value = {"/users"})
+    public ModelAndView preUsers (HttpServletRequest request){
+        User sessionUser = (User) request.getSession().getAttribute("user");
+        List<User> users = new ArrayList<>();
+        List<User> allUsers ;
+        allUsers = userJpaRepository.findAll();
+        allUsers.forEach(u ->{
+            if (!u.getUserName().equals(sessionUser.getUserName())){
+                users.add(u);
+            }
+        });
+        return new ModelAndView("users")
+                .addObject("otherUsers", users);
     }
 
     @GetMapping(value = {"/delete"})
@@ -141,49 +152,6 @@ public class UserController {
         }
         response.sendRedirect(request.getContextPath());
     }
-    @PostMapping(value = {"/uploadPhoto"})
-    public ModelAndView uploadPhoto(@ModelAttribute("imageForm") UserForm imageForm, HttpServletRequest request) throws IOException {
 
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
-        ModelAndView modelAndView;
-        imageForm.setImage(imageForm.getFileData().getBytes());
-        request.getSession().setAttribute("imageForm",imageForm);
-
-        if(user!=null){
-            UserForm userForm = new UserForm(userJpaRepository.findById((int) session.getAttribute("updatedUserId")));
-            userForm.setImage(imageForm.getImage());
-            session.removeAttribute("updatedUserId");
-            modelAndView = new ModelAndView("update");
-            modelAndView.addObject("updateUserForm",userForm);
-        }else{
-            UserForm userForm=new UserForm();
-            modelAndView = new ModelAndView("register");
-            modelAndView.addObject("registrationForm",userForm);
-        }
-        return modelAndView;
-    }
-
-    @GetMapping(value = {"/viewImage"})
-    public void viewImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        UserForm imageForm = (UserForm) request.getSession().getAttribute("imageForm");
-        if(imageForm.getImage()!=null) {
-            response.setContentType("image/jpg");
-            response.getOutputStream().write(imageForm.getImage());
-        }
-        request.removeAttribute("imageForm");
-        response.getOutputStream().close();
-    }
-
-    @GetMapping(value = {"/imageOnPage"})
-    public void imageOnWelcomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession(false);
-        UserForm userForm = new UserForm((User) session.getAttribute("user"));
-        if (userForm.getImage() != null) {
-            response.setContentType("img/jpg");
-            response.getOutputStream().write(userForm.getImage());
-        }
-        response.getOutputStream().close();
-    }
 }
 
