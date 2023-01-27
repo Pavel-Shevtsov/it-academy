@@ -1,15 +1,14 @@
 package org.web.controllers.topic;
 
-import jakarta.jws.WebParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.dao.inter.PostDAO;
-import org.example.dao.inter.TopicDAO;
-import org.example.dao.inter.UserDAO;
 import org.example.model.Post;
 import org.example.model.Topic;
 import org.example.model.User;
+import org.example.repository.PostJpaRepository;
+import org.example.repository.TopicJpaRepository;
+import org.example.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import org.web.forms.TopicForm;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +25,11 @@ import java.util.List;
 public class TopicController {
 
     @Autowired
-    TopicDAO topicDAO;
+    TopicJpaRepository topicJpaRepository;
     @Autowired
-    UserDAO userDAO;
+    UserJpaRepository userJpaRepository;
     @Autowired
-    PostDAO postDAO;
+    PostJpaRepository postJpaRepository;
 
     @GetMapping(value = {"/create"})
     public ModelAndView preCreate(){
@@ -40,11 +38,11 @@ public class TopicController {
     @PostMapping(value ={"/create"})
     public ModelAndView create(@ModelAttribute("topicForm") TopicForm createTopicForm, HttpServletResponse response, HttpServletRequest request) throws IOException {
         ModelAndView modelAndView;
-        Topic byTopicName = topicDAO.getTopicByTopicName(createTopicForm.getTopicName());
+        Topic byTopicName = topicJpaRepository.findByName(createTopicForm.getTopicName());
         if (byTopicName == null) {
             Topic topic = new Topic();
             topic.setName(createTopicForm.getTopicName());
-            topicDAO.add(topic);
+            topicJpaRepository.save(topic);
             response.sendRedirect(request.getContextPath() + "/welcome");
         }
             modelAndView = new ModelAndView("createTopic")
@@ -57,9 +55,9 @@ public class TopicController {
         ModelAndView modelAndView;
         HttpSession session = request.getSession(false);
         User sessionUser = (User) session.getAttribute("user");
-        User userByIdWithTopic = userDAO.getUserByIdWithTopic(sessionUser.getId());
+        User userByIdWithTopic = userJpaRepository.getUserByIdWithTopic(sessionUser.getId());
         List<Topic> allTopicsUser = userByIdWithTopic.getTopics();
-        List<Topic> allTopics = topicDAO.allTopic();
+        List<Topic> allTopics = topicJpaRepository.findAll();
         if (allTopicsUser.size()!=0) {
             for (Topic topic : allTopicsUser) {
                 for (int k = 0; k < allTopics.size(); k++) {
@@ -80,8 +78,8 @@ public class TopicController {
         ModelAndView modelAndView = null;
         HttpSession session = request.getSession(false);
         User sessionUser = (User) session.getAttribute("user");
-        User userByUserName = userDAO.getUserByIdWithTopic(sessionUser.getId());
-        Topic topicById = topicDAO.getById(topicId);
+        User userByUserName = userJpaRepository.getUserByIdWithTopic(sessionUser.getId());
+        Topic topicById = topicJpaRepository.findById(topicId);
 
         List<Topic> topics = userByUserName.getTopics();
         int sizeUpTo = topics.size();
@@ -91,7 +89,7 @@ public class TopicController {
 
         topicById.setUsers(Collections.singletonList(userByUserName));
         if (sizeUpTo!=sizeAfter){
-            userDAO.update(userByUserName);
+            userJpaRepository.save(userByUserName);
             response.sendRedirect(request.getContextPath()+ "/welcome");
         }else {
             modelAndView = new ModelAndView("addTopic")
@@ -105,20 +103,23 @@ public class TopicController {
         HttpSession session = request.getSession(false);
         User sessionUser = (User) session.getAttribute("user");
         if (topicId!=0) {
-            Topic topicById = topicDAO.getById(topicId);
-            User userById = userDAO.getUserByIdWithTopic(sessionUser.getId());
+            Topic topicById = topicJpaRepository.findById(topicId);
+            User userById = userJpaRepository.getUserByIdWithTopic(sessionUser.getId());
 
             int indexTopicInList = -1;
             List<Topic> userTopics = userById.getTopics();
             for (Topic topic : userTopics) {
                 if (topic.getName().equals(topicById.getName())) {
                     indexTopicInList = userTopics.indexOf(topic);
-                   postDAO.deleteAllUserPost(sessionUser.getId(),topicId);
+                    List<Post> postByUserTopic = postJpaRepository.findPostByUserTopic(topicId,sessionUser.getId());
+                    for (Post post : postByUserTopic) {
+                        postJpaRepository.delete(post);
+                    }
                 }
             }
-            topicDAO.update(topicById);
+            topicJpaRepository.save(topicById);
             userTopics.remove(indexTopicInList);
-            userDAO.update(userById);
+            userJpaRepository.save(userById);
         }
         response.sendRedirect(request.getContextPath() + "/welcome");
     }

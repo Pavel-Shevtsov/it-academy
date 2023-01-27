@@ -10,12 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Table(name = "post",uniqueConstraints = @UniqueConstraint(name = "user_topic_post",columnNames = {"id","topic_id","user_id"}))
-@NamedQueries({
-        @NamedQuery(name = "Post.getAll", query = "SELECT p from Post p"),
-        @NamedQuery(name = "Post.getPostByName", query = "SELECT p from Post p where p.name = :name"),
-        @NamedQuery(name = "Post.getTopicById", query = "SELECT p from Post p where p.id = :id"),
-        @NamedQuery(name = "Post.getPostByUserTopic",query = "SELECT p from Post p where p.topic.id = :idTopic and p.user.id = :idUser")
-})
 public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

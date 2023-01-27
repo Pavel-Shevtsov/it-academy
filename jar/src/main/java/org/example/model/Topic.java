@@ -13,12 +13,6 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Topic.getAll", query = "SELECT t from Topic t"),
-        @NamedQuery(name = "Topic.getTopicById", query = "SELECT t from Topic t where t.id = :id"),
-        @NamedQuery(name = "Topic.getTopicByTopicName", query = "SELECT t from Topic t where t.name = :topicName"),
-
-})
 @Table(name = "topic")
 public class Topic implements Serializable {
 

@@ -1,6 +1,6 @@
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language = "Java" contentType = "text/html charset = ISO-8859-1" pageEncoding = "ISO-8859-1" %>
-
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
     <html>
     <head>
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
@@ -9,6 +9,7 @@
     <style><%@include file="/WEB-INF/style/stylePanel.css"%></style>
     <style><%@include file="/WEB-INF/style/styleDropDownUser.css"%></style>
     <style><%@include file="/WEB-INF/style/styleTable.css"%></style>
+    <style><%@include file="/WEB-INF/style/photoViews.css"%></style>
     <title>All Users</title>
 
     </head>
@@ -16,7 +17,7 @@
             <div class="panel">
                  <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                     <div class="dropdownUser">
-                    <button class="dropBtn">${userName}</button>
+                    <button class="dropBtn"><img src="${pageContext.request.contextPath}/add/imageOnPage"  class = "photoViews"/> ${userName}</button>
                         <div class="dropdownUser-content" style="right:20;" >
                             <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
                             <p><a href = '${pageContext.request.contextPath}/user/update?id=${userId}'>Update</a></p>

@@ -13,6 +13,6 @@
     </head>
     <body>
         <button onclick = "location.href='${pageContext.request.contextPath}/login'">Login </button>
-    	<button onclick = "location.href='${pageContext.request.contextPath}/addUser'">Registration </button>
+    	<button onclick = "location.href='${pageContext.request.contextPath}/add'">Registration </button>
     </body>
     </html>

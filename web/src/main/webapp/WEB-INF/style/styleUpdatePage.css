@@ -5,7 +5,7 @@
     margin-right: auto;
     margin-top:60px;
     width: 400px;
-    height: 1010px;
+    height: 860px;
     border-radius: 10px;
     margin:auto;
 }
@@ -26,7 +26,7 @@ h1{
 
 .updateText{
     text-align: center;
-    padding-top: 100px;
+    padding-top: 30px;
     margin:12px 0;
     margin-bottom:auto;
 }
@@ -68,7 +68,7 @@ input[type=submit]{
     text-align: center;
     margin-right: auto;
     padding: 8px 0;
-    margin-top: 80px;
+    margin-top: 40px;
     border:0;
     border-radius: 8px;
 }

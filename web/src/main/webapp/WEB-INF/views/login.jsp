@@ -15,7 +15,6 @@
                     <div class = "message">
                         ${loginError}
                         ${errorPasswordUsername}
-                        ${userUpdate}
                         ${createNewUser}
                     </div>
                     <div class= "loginPage">

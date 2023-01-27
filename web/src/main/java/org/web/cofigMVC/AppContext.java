@@ -6,6 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -20,7 +22,8 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan(basePackages = {"org.example.dao","org.example.validation","org.web"})
+@ComponentScan(basePackages = {"org.example.validation","org.web"})
+@EnableJpaRepositories(basePackages = {"org.example.repository"})
 @EnableTransactionManagement
 public class AppContext {
 
@@ -67,7 +70,12 @@ public class AppContext {
 
         return jpaTransactionManager;
     }
+
     @Bean
+    public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor(){
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+    /*@Bean
     public JavaMailSenderImpl getJavaMailSenderImpl(){
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setPort(587);
@@ -87,5 +95,5 @@ public class AppContext {
         properties.put("mail.debug","true");
         properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
         return properties;
-    }
+    }*/
 }

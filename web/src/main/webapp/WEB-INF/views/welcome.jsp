@@ -1,6 +1,6 @@
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page language = "Java" contentType = "text/html; charset = ISO-8859-1" pageEncoding = "ISO-8859-1" %>
-
+<%@ page language = "Java" contentType = "text/html; charset = ISO-8859-1" pageEncoding = "UTF-8" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
     <html>
     <head>
     <meta http-equiv = "Context-Type" context = "text/html charset = ISO-8859-1" >
@@ -10,6 +10,7 @@
         <%@include file="/WEB-INF/style/stylePanel.css"%>
         <%@include file="/WEB-INF/style/styleDropDownUser.css"%>
         <%@include file="/WEB-INF/style/styleTable.css"%>
+        <%@include file="/WEB-INF/style/photoViews.css"%>
     </style>
     <title>Welcome</title>
     </head>
@@ -18,16 +19,18 @@
                     <div class="panel">
                         <a class="nameApplication" href = '${pageContext.request.contextPath}/welcome'>T&P</a>
                            <div class="dropDownUser">
-                               <button class="dropBtn"> ${userName}</button>
+                               <button class="dropBtn"> <img src="${pageContext.request.contextPath}/add/imageOnPage"  class = "photoViews"/> ${userName}</button>
                                    <div class="dropDownUser-content" style="right:20;">
                                        <p><a href = '${pageContext.request.contextPath}/welcome'>Welcome</a></p>
                                        <p><a href = '${pageContext.request.contextPath}/user/update?id=${userId}'>Update</a></p>
-                                       <c:if test="${user.getRole().equals('Admin')}">
+                                       <security:authorize access = "hasRole('ROLE_Admin')">
                                        <p><a href ='${pageContext.request.contextPath}/user/users'>All Users</a></p>
                                        <p><a href ='${pageContext.request.contextPath}/topic/create'>Create Topic</a></p>
-                                       </c:if>
-                                       <c:if test="${user.getRole().equals('User')}">
-                                       <p><a href ='${pageContext.request.contextPath}/topic/allFree'>Add Topic</a></p>                                       </c:if>
+                                       </security:authorize>
+
+                                        <security:authorize access = "hasRole('ROLE_User')">
+                                        <p><a href ='${pageContext.request.contextPath}/topic/allFree'>Add Topic</a></p>
+                                         </security:authorize>
                                        <p><a href = '${pageContext.request.contextPath}/user/logout' >Logout</a></p>
                                    </div>
                            </div>
@@ -41,13 +44,13 @@
                               ${deletePost}
                           </div>
                                  <div class ="welcomeMessage">
-                                      <p><img src="${pageContext.request.contextPath}/user/imageOnWelcomePage" width="150"/></p>
                                       <c:if test = "${visitCounter<1}">
+                                       <p><img src="${pageContext.request.contextPath}/add/imageOnPage" width="200"/></p>
                                       <h1>Welcome ${userName}</h1>
                                       </c:if>
                                  </div>
                 <table>
-                    <c:if test="${user.role.equals('Admin')}">
+                    <security:authorize access = "hasRole('ROLE_Admin')">
                         <thead>
                             <th >All topics</th>
                         </thead>
@@ -58,8 +61,8 @@
                                     </tr>
                             </tbody>
                                 </c:forEach>
-                    </c:if>
-                                <c:if test="${user.role.equals('User')}">
+                   </security:authorize>
+                                <security:authorize access = "hasRole('ROLE_User')">
                                       <form action="${pageContext.request.contextPath}/welcome" method = "get" >
                                           <thead>
                                               <th >All topics</th>
@@ -75,7 +78,7 @@
                                               </tbody>
                                                   </c:forEach>
                                       </form>
-                                </c:if>
+                                </security:authorize>
                 </table>
             </body>
     </html>
